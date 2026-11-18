@@ -11,6 +11,59 @@ const qty = (n) => Number(Number(n || 0).toFixed(3)).toLocaleString('id-ID', {
 const totalSales = Number(cash || 0) + Number(qris || 0) + Number(debit || 0);
 %>
 
+<style>
+.recap-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.recap-stat-column {
+  display: grid;
+  grid-template-rows: 34px 88px 88px;
+  gap: 8px;
+  min-width: 0;
+}
+
+.recap-stat-column .stat {
+  width: 100%;
+  min-width: 0;
+  min-height: 88px;
+  height: 88px;
+  box-sizing: border-box;
+}
+
+.recap-invoice-slot {
+  height: 34px;
+  display: flex;
+  align-items: center;
+}
+
+.recap-invoice-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 32px;
+  padding: 7px 12px;
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+@media (max-width: 480px) {
+  .recap-stats {
+    gap: 8px;
+  }
+
+  .recap-stat-column {
+    gap: 8px;
+  }
+}
+</style>
+
 <main class="page">
   <section>
     <h2>
@@ -19,38 +72,45 @@ const totalSales = Number(cash || 0) + Number(qris || 0) + Number(debit || 0);
     </h2>
   </section>
 
-  <section class="grid2">
-    <div class="stat">
-      <span>Uang kembalian awal</span>
-      <strong><%= rp(b.opening_cash) %></strong>
+  <section class="recap-stats">
+    <div class="recap-stat-column">
+      <div class="recap-invoice-slot"></div>
+
+      <div class="stat">
+        <span>Uang Modal Kembalian</span>
+        <strong><%= rp(b.opening_cash) %></strong>
+      </div>
+
+      <div class="stat">
+        <span>Total penjualan</span>
+        <strong><%= rp(totalSales) %></strong>
+      </div>
     </div>
 
-    <div class="stat">
-      <span>Penjualan tunai</span>
-      <strong><%= rp(cash) %></strong>
-    </div>
+    <div class="recap-stat-column">
+      <div class="recap-invoice-slot">
+        <% if (!isOpen) { %>
+          <a
+            href="/bazar/<%= b.id %>/invoice.pdf"
+            target="_blank"
+            rel="noopener"
+            class="btn recap-invoice-btn"
+          >
+            Unduh Invoice PDF
+          </a>
+        <% } %>
+      </div>
 
-    <div class="stat">
-      <span>QRIS</span>
-      <strong><%= rp(qris) %></strong>
-    </div>
+      <div class="stat">
+        <span>Penjualan tunai</span>
+        <strong><%= rp(cash) %></strong>
+      </div>
 
-    <div class="stat">
-      <span>Debit</span>
-      <strong><%= rp(debit) %></strong>
+      <div class="stat">
+        <span>Uang tunai seharusnya</span>
+        <strong><%= rp(expected) %></strong>
+      </div>
     </div>
-
-    <div class="stat">
-      <span>Total penjualan (<%= trx %> transaksi)</span>
-      <strong><%= rp(totalSales) %></strong>
-    </div>
-
-    <div class="stat">
-      <span>Uang tunai seharusnya</span>
-      <strong><%= rp(expected) %></strong>
-    </div>
-
-    
   </section>
 
   <% if (isOpen) { %>
@@ -124,7 +184,6 @@ const totalSales = Number(cash || 0) + Number(qris || 0) + Number(debit || 0);
         </tbody>
       </table>
     </div>
-    <p>unduh invoice</p>
   </section>
 </main>
 
