@@ -33,6 +33,11 @@ import {
   itemAdd,
   itemUpdate,
 } from "../../controllers/item.controller";
+import {
+  adminDashboard,
+  adminBazaarList,
+  adminDeleteBazaar,
+} from "../../controllers/admin.controller";
 
 const wrap = (fn: any) => (req: any, res: any, next: any) =>
   Promise.resolve(fn(req, res, next)).catch(next);
@@ -93,5 +98,15 @@ r.get("/struk/:id", requireAuth, wrap(receiptPage));
 
 r.get("/produk", requireAuth, requireAdmin, wrap(productPage));
 r.post("/produk/ubah", requireAuth, requireAdmin, wrap(updateProduct));
+r.get("/admin", requireAuth, requireAdmin, wrap(adminDashboard));
+
+r.get("/admin/bazar", requireAuth, requireAdmin, wrap(adminBazaarList));
+
+r.post(
+  "/admin/bazar/:id/hapus",
+  requireAuth,
+  requireAdmin,
+  wrap(adminDeleteBazaar),
+);
 
 export default r;

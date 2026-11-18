@@ -7,7 +7,8 @@
     "build": "tsc",
     "start": "node dist/server.local.js",
     "staff:create": "tsx scripts/create-staff.ts",
-    "products:import": "tsx scripts/import-products.ts"
+    "products:import": "tsx scripts/import-products.ts",
+    "admin:reset": "tsx scripts/reset-admin.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

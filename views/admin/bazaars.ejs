@@ -1,0 +1,94 @@
+
+<%- include('../partials/head') %>
+
+<section class="stack">
+  <div>
+    <span class="muted small">ADMINISTRATION</span>
+    <h2>Manajemen Bazar</h2>
+    <p class="muted">Kelola riwayat bazar dari seluruh toko.</p>
+  </div>
+
+  <div class="actions">
+    <a href="/admin" class="btn ghost">Kembali ke Dashboard</a>
+    <a href="/bazar" class="btn ghost">Bazar Saya</a>
+  </div>
+
+  <% if (success) { %>
+    <div class="alert">Riwayat bazar berhasil dihapus.</div>
+  <% } %>
+
+  <% if (error) { %>
+    <div class="alert"><%= error %></div>
+  <% } %>
+
+  <section class="grid">
+    <article class="card stack">
+      <span class="muted small">Total Bazar</span>
+      <strong style="font-size:26px"><%= stats.total %></strong>
+    </article>
+
+    <article class="card stack">
+      <span class="muted small">Berjalan</span>
+      <strong style="font-size:26px"><%= stats.open %></strong>
+    </article>
+
+    <article class="card stack">
+      <span class="muted small">Selesai</span>
+      <strong style="font-size:26px"><%= stats.closed %></strong>
+    </article>
+  </section>
+
+  <section class="card stack">
+    <strong>Seluruh Riwayat Bazar</strong>
+
+    <% if (!bazaars.length) { %>
+      <p class="muted">Belum ada riwayat bazar.</p>
+    <% } else { %>
+      <ul class="list">
+        <% bazaars.forEach(b => { %>
+          <li>
+            <div class="row" style="justify-content:space-between;gap:12px">
+              <div class="stack" style="gap:5px">
+                <strong><%= b.name %></strong>
+                <span class="muted small">Toko: <%= b.storeName %></span>
+                <span class="muted small">Petugas: <%= b.staffName %></span>
+                <span class="muted small">
+                  Dibuka: <%= dateFormat(b.openedAt) %>
+                </span>
+                <% if (b.closedAt) { %>
+                  <span class="muted small">
+                    Ditutup: <%= dateFormat(b.closedAt) %>
+                  </span>
+                <% } %>
+              </div>
+
+              <span class="pill">
+                <%= b.status === 'open' ? 'Berjalan' : 'Selesai' %>
+              </span>
+            </div>
+
+            <div class="actions" style="margin-top:12px">
+              <% if (b.status === 'closed') { %>
+                <form
+                  method="post"
+                  action="/admin/bazar/<%= b.id %>/hapus"
+                  onsubmit="return confirm('Yakin ingin menghapus riwayat bazar ini beserta seluruh transaksi di dalamnya? Data yang dihapus tidak dapat dikembalikan.');"
+                >
+                  <button class="btn" type="submit">Hapus Riwayat</button>
+                </form>
+              <% } else { %>
+                <button class="btn ghost" type="button" disabled>
+                  Bazar Masih Berjalan
+                </button>
+              <% } %>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </section>
+</section>
+
+<%- include('../partials/foot') %>
+</body>
+</html>

@@ -1,0 +1,45 @@
+
+<%- include('../partials/head') %>
+
+<section class="stack">
+  <div class="row" style="justify-content:space-between;align-items:center">
+    <div>
+      <span class="muted small">ADMINISTRATION</span>
+      <h2>Dashboard Admin</h2>
+      <p class="muted">Ringkasan operasional YM Mobile POS.</p>
+    </div>
+    <a href="/admin/bazar" class="btn">Kelola Riwayat Bazar</a>
+  </div>
+
+  <section class="grid">
+    <article class="card stack">
+      <span class="muted small">Total Bazar</span>
+      <strong style="font-size:28px"><%= stats.total %></strong>
+    </article>
+
+    <article class="card stack">
+      <span class="muted small">Bazar Berjalan</span>
+      <strong style="font-size:28px"><%= stats.open %></strong>
+    </article>
+
+    <article class="card stack">
+      <span class="muted small">Bazar Selesai</span>
+      <strong style="font-size:28px"><%= stats.closed %></strong>
+    </article>
+
+    <article class="card stack">
+      <span class="muted small">Total Transaksi</span>
+      <strong style="font-size:28px"><%= stats.transactions %></strong>
+    </article>
+  </section>
+
+  <section class="card stack">
+    <strong>Manajemen Bazar</strong>
+    <p class="muted">Lihat riwayat bazar dari seluruh toko dan hapus riwayat bazar yang sudah selesai.</p>
+    <a href="/admin/bazar" class="btn">Buka Manajemen Bazar</a>
+  </section>
+</section>
+
+<%- include('../partials/foot') %>
+</body>
+</html>

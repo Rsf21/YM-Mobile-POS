@@ -116,6 +116,26 @@
       <span>Daftar Bazar</span>
     </a>
 
+    <% if (user.role === 'admin') { %>
+  <span class="side-nav-label">ADMINISTRASI</span>
+
+  <a
+    href="/admin"
+    class="<%= typeof active !== 'undefined' && active === 'admin' ? 'current' : '' %>"
+  >
+    <span class="nav-icon">▦</span>
+    <span>Dashboard Admin</span>
+  </a>
+
+  <a
+    href="/admin/bazar"
+    class="<%= typeof active !== 'undefined' && active === 'admin-bazaars' ? 'current' : '' %>"
+  >
+    <span class="nav-icon">▤</span>
+    <span>Manajemen Bazar</span>
+  </a>
+<% } %>
+
     <a
       href="/faq"
       class="<%= typeof active !== 'undefined' && active === 'faq' ? 'current' : '' %>"
