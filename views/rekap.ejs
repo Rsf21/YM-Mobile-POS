@@ -1,4 +1,3 @@
-
 <%- include('partials/head') %>
 
 <%
@@ -10,59 +9,6 @@ const qty = (n) => Number(Number(n || 0).toFixed(3)).toLocaleString('id-ID', {
 
 const totalSales = Number(cash || 0) + Number(qris || 0) + Number(debit || 0);
 %>
-
-<style>
-.recap-stats {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  align-items: start;
-}
-
-.recap-stat-column {
-  display: grid;
-  grid-template-rows: 34px 88px 88px;
-  gap: 8px;
-  min-width: 0;
-}
-
-.recap-stat-column .stat {
-  width: 100%;
-  min-width: 0;
-  min-height: 88px;
-  height: 88px;
-  box-sizing: border-box;
-}
-
-.recap-invoice-slot {
-  height: 34px;
-  display: flex;
-  align-items: center;
-}
-
-.recap-invoice-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  min-height: 32px;
-  padding: 7px 12px;
-  font-size: 12px;
-  line-height: 1;
-  white-space: nowrap;
-  text-decoration: none;
-}
-
-@media (max-width: 480px) {
-  .recap-stats {
-    gap: 8px;
-  }
-
-  .recap-stat-column {
-    gap: 8px;
-  }
-}
-</style>
 
 <main class="page">
   <section>
@@ -152,10 +98,11 @@ const totalSales = Number(cash || 0) + Number(qris || 0) + Number(debit || 0);
     <h3>Rincian barang</h3>
 
     <div class="tbl-wrap">
-      <table class="tbl">
+      <table class="tbl recap-table">
         <thead>
           <tr>
             <th>Barang</th>
+            <th class="recap-price-col">Harga</th>
             <th>Bawa</th>
             <th>Terjual</th>
             <th>Sisa</th>
@@ -166,17 +113,22 @@ const totalSales = Number(cash || 0) + Number(qris || 0) + Number(debit || 0);
         <tbody>
           <% items.forEach(i => { %>
             <tr>
-              <td><%= i.name %></td>
+              <td>
+                <span class="recap-item-name"><%= i.name %></span>
+                <span class="recap-item-sku"><%= i.sku || '-' %></span>
+              </td>
+
+              <td class="recap-price-col"><%= rp(i.price) %></td>
               <td><%= qty(i.brought) %></td>
               <td><%= qty(i.sold) %></td>
               <td><%= qty(i.brought - i.sold) %></td>
-              <td><%= rp(i.price * i.sold) %></td>
+              <td class="recap-omzet-col"><%= rp(i.price * i.sold) %></td>
             </tr>
           <% }) %>
 
           <% if (!items.length) { %>
             <tr>
-              <td colspan="5" style="text-align:center">
+              <td colspan="6" style="text-align:center">
                 Belum ada barang bazar.
               </td>
             </tr>

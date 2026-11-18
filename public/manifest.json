@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "YM Mobile POS",
-  "short_name": "YM POS",
+  "name": "Yomart Mobile POS",
+  "short_name": "YM Mobile POS",
   "description": "Aplikasi kasir dan manajemen bazar Yomart",
   "start_url": "/",
   "scope": "/",

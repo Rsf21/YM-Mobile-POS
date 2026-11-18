@@ -443,47 +443,54 @@ export async function bazaarInvoicePdf(req: Request, res: Response) {
   drawTableHeader(y);
   y += 28;
 
-  doc.font("Helvetica").fontSize(7).fillColor("#202833");
-
   for (const [index, item] of data.items.entries()) {
-    if (y > 700) {
+    if (y > 690) {
       doc.addPage();
       y = 55;
       drawTableHeader(y);
       y += 28;
-      doc.font("Helvetica").fontSize(7).fillColor("#202833");
     }
 
-    const rowHeight = 24;
+    const rowHeight = 32;
 
-    doc.text(String(index + 1), columns.no, y + 8);
+    doc.font("Helvetica").fontSize(7).fillColor("#202833");
+    doc.text(String(index + 1), columns.no, y + 10);
 
-    doc.text(item.name, columns.name, y + 8, {
+    doc.font("Helvetica-Bold").fontSize(7).fillColor("#202833");
+    doc.text(item.name, columns.name, y + 5, {
       width: 195,
       ellipsis: true,
     });
 
-    doc.text(`${item.brought} ${item.unit}`, columns.brought, y + 8, {
+    doc.font("Helvetica").fontSize(6).fillColor("#000000");
+    doc.text(`${item.sku}`, columns.name, y + 17, {
+      width: 195,
+      ellipsis: true,
+    });
+
+    doc.font("Helvetica").fontSize(7).fillColor("#202833");
+
+    doc.text(`${item.brought} ${item.unit}`, columns.brought, y + 10, {
       width: 48,
       align: "right",
     });
 
-    doc.text(`${item.quantity} ${item.unit}`, columns.sold, y + 8, {
+    doc.text(`${item.quantity} ${item.unit}`, columns.sold, y + 10, {
       width: 48,
       align: "right",
     });
 
-    doc.text(`${item.remaining} ${item.unit}`, columns.remaining, y + 8, {
+    doc.text(`${item.remaining} ${item.unit}`, columns.remaining, y + 10, {
       width: 45,
       align: "right",
     });
 
-    doc.text(rupiah(item.price), columns.price, y + 8, {
+    doc.text(rupiah(item.price), columns.price, y + 10, {
       width: 55,
       align: "right",
     });
 
-    doc.text(rupiah(item.subtotal), columns.subtotal, y + 8, {
+    doc.text(rupiah(item.subtotal), columns.subtotal, y + 10, {
       width: 60,
       align: "right",
     });
@@ -503,7 +510,6 @@ export async function bazaarInvoicePdf(req: Request, res: Response) {
   y += 22;
 
   const summaryRows = [
-    ["Total transaksi", String(data.transactionCount)],
     ["Total penjualan", rupiah(data.totalSales)],
     ["Uang pembukaan", rupiah(data.openingCash)],
     ["Uang penutupan", rupiah(data.closingCash)],
@@ -552,7 +558,7 @@ export async function bazaarInvoicePdf(req: Request, res: Response) {
     .font("Helvetica-Bold")
     .fontSize(9)
     .fillColor("#202833")
-    .text(`STATUS: ${data.differenceStatus.toUpperCase()}`, left, y);
+    .text(`${data.differenceStatus.toUpperCase()}`, left, y);
 
   const pages = doc.bufferedPageRange();
 

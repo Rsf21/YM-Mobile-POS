@@ -389,28 +389,34 @@
   }
 
   function updateClosingPreview() {
+    var el = $("closing-diff");
     var value = $("closing-cash").value;
 
+    el.classList.remove("text-danger", "text-success");
+
     if (value === "") {
-      $("closing-diff").textContent = "Belum dihitung";
+      el.textContent = "Belum dihitung";
       return;
     }
 
     var closing = Number(value);
 
     if (!Number.isSafeInteger(closing) || closing < 0 || closing > 1000000000) {
-      $("closing-diff").textContent = "Nominal tidak valid";
+      el.textContent = "Nominal tidak valid";
+      el.classList.add("text-danger");
       return;
     }
 
     var diff = closing - currentTotalSales;
 
     if (diff === 0) {
-      $("closing-diff").textContent = "Pas";
+      el.textContent = "Pas";
     } else if (diff > 0) {
-      $("closing-diff").textContent = "Lebih " + rp(diff);
+      el.textContent = "+ " + rp(diff);
+      el.classList.add("text-success");
     } else {
-      $("closing-diff").textContent = "Kurang " + rp(Math.abs(diff));
+      el.textContent = "- " + rp(Math.abs(diff));
+      el.classList.add("text-danger");
     }
   }
 
