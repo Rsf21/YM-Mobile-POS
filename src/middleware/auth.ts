@@ -36,14 +36,29 @@ export async function requireBazaar(
   next: NextFunction,
 ) {
   try {
-    const id = req.session?.bazaarId;
-    const bazaar = id ? await getOpenBazaar(req.session!.storeId, id) : null;
+    if (!req.session?.storeId) {
+      if (req.originalUrl.startsWith("/api/")) {
+        return res.status(403).json({ error: "Akun tidak terhubung ke toko" });
+      }
+
+      return res.status(403).render("error", {
+        message: "Akun ini tidak terhubung ke toko",
+      });
+    }
+
+    const id = req.session.bazaarId;
+    const bazaar = id ? await getOpenBazaar(req.session.storeId, id) : null;
+
     if (!bazaar) {
-      if (req.session) req.session.bazaarId = null;
-      if (req.originalUrl.startsWith("/api/"))
+      req.session.bazaarId = null;
+
+      if (req.originalUrl.startsWith("/api/")) {
         return res.status(409).json({ error: "Pilih bazar dulu" });
+      }
+
       return res.redirect("/bazar");
     }
+
     res.locals.bazaar = bazaar;
     next();
   } catch (e) {

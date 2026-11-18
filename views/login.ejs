@@ -1,14 +1,68 @@
+
 <%- include('partials/head') %>
+
 <section class="login">
-  <h1>YM Mobile POS</h1>
-  <p class="muted">Masuk dengan akun kasir</p>
-  <% if (error) { %><div class="alert"><%= error %></div><% } %>
+  <div class="login-logo">
+    <img src="/images/TECH/yomartpng.png" alt="Logo Yomart">
+  </div>
+
+  <h1>Yomart Mobile POS</h1>
+
+  <% if (error) { %>
+    <div class="alert"><%= error %></div>
+  <% } %>
+
   <form method="post" action="/login" class="stack">
-    <label>Username<input name="username" autocomplete="username" required autofocus></label>
-    <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
-    <button class="btn" type="submit">Masuk</button>
+    <label for="username">Username</label>
+
+    <input
+      id="username"
+      name="username"
+      type="text"
+      placeholder="Masukkan username"
+      autocomplete="username"
+      required
+      autofocus
+    >
+
+    <label for="password">Password</label>
+
+    <div class="password-field">
+      <input
+        id="password"
+        name="password"
+        type="password"
+        placeholder="Masukkan password"
+        autocomplete="current-password"
+        required
+      >
+
+      <button
+        type="button"
+        id="togglePassword"
+        aria-label="Tampilkan password"
+        aria-pressed="false"
+      >
+        Tampilkan
+      </button>
+    </div>
+
+    <button class="btn login-button" type="submit">
+      Masuk
+    </button>
   </form>
 </section>
+
+<p class="login-credit">
+  Founded &amp; Developed By Reza Septa Fauziansyah
+</p>
+
+<p class="login-copyright">
+  @Seluruh hak cipta dilindungi
+</p>
+
+<script src="/js/login.js" defer></script>
+
 </main>
 </body>
 </html>

@@ -1,4 +1,4 @@
-import { db } from "../config/supabase";
+import { db } from "../src/config/supabase";
 
 export async function getAdminStats() {
   const [total, open, closed, transactions] = await Promise.all([

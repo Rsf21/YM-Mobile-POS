@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f8">
+  <title>Administrator - YM Mobile POS</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<main class="page">
+  <section class="card stack" style="max-width:420px;margin:70px auto">
+    <div class="stack" style="text-align:center">
+      <strong style="font-size:22px">YM Mobile POS</strong>
+      <span class="muted small">ADMINISTRATION PORTAL</span>
+      <h2>Administrator Login</h2>
+      <p class="muted">Masuk menggunakan akun administrator.</p>
+    </div>
+
+    <% if (error) { %>
+      <div class="alert"><%= error %></div>
+    <% } %>
+
+    <form method="post" action="/acikiwir" class="stack">
+      <label>
+        Username
+        <input name="username" autocomplete="username" required>
+      </label>
+
+      <label>
+        Password
+        <input type="password" name="password" autocomplete="current-password" required>
+      </label>
+
+      <button type="submit" class="btn">Masuk sebagai Admin</button>
+    </form>
+  </section>
+</main>
+
+</body>
+</html>

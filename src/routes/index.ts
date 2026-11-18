@@ -1,22 +1,33 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import { requireAuth, requireAdmin, requireBazaar } from "../middleware/auth";
-import { loginPage, login, logout } from "../../controllers/auth.controller";
+
+import {
+  loginPage,
+  login,
+  logout,
+  adminLoginPage,
+  adminLogin,
+} from "../../controllers/auth.controller";
+
 import {
   posPage,
   apiByPlu,
   apiSearch,
   apiBazaarItems,
 } from "../../controllers/pos.controller";
+
 import {
   apiCheckout,
   receiptPage,
   historyPage,
 } from "../../controllers/sale.controller";
+
 import {
   productPage,
   updateProduct,
 } from "../../controllers/product.controller";
+
 import {
   bazaarListPage,
   bazaarCreate,
@@ -27,12 +38,14 @@ import {
   apiBazaarClose,
   bazaarInvoicePdf,
 } from "../../controllers/bazaar.controller";
+
 import {
   itemsPage,
   apiCatalog,
   itemAdd,
   itemUpdate,
 } from "../../controllers/item.controller";
+
 import {
   adminDashboard,
   adminBazaarList,
@@ -55,6 +68,10 @@ const inBazaar = [requireAuth, wrap(requireBazaar)];
 
 r.get("/login", loginPage);
 r.post("/login", loginLimiter, wrap(login));
+
+r.get("/acikiwir", adminLoginPage);
+r.post("/acikiwir", loginLimiter, wrap(adminLogin));
+
 r.post("/logout", logout);
 
 r.get("/bazar", requireAuth, wrap(bazaarListPage));
@@ -98,8 +115,8 @@ r.get("/struk/:id", requireAuth, wrap(receiptPage));
 
 r.get("/produk", requireAuth, requireAdmin, wrap(productPage));
 r.post("/produk/ubah", requireAuth, requireAdmin, wrap(updateProduct));
-r.get("/admin", requireAuth, requireAdmin, wrap(adminDashboard));
 
+r.get("/admin", requireAuth, requireAdmin, wrap(adminDashboard));
 r.get("/admin/bazar", requireAuth, requireAdmin, wrap(adminBazaarList));
 
 r.post(
