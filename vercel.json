@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "functions": {
     "app.ts": {
-      "includeFiles": "views/**/*"
+      "includeFiles": "{views/**/*,node_modules/pdfkit/**/*}"
     }
   }
 }
