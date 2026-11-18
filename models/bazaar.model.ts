@@ -369,3 +369,39 @@ export async function getBazaarInvoiceData(storeId: string, bazaarId: string) {
     })),
   };
 }
+
+export type FinalizeBazaarItem = {
+  sku: string;
+  qty: number;
+};
+
+export async function finalizeBazaar(
+  bazaarId: string,
+  storeId: string,
+  staffId: string,
+  closingCash: number,
+  items: FinalizeBazaarItem[],
+) {
+  const { data, error } = await db.rpc("finalize_bazaar", {
+    p_bazaar: bazaarId,
+    p_store: storeId,
+    p_staff: staffId,
+    p_closing_cash: closingCash,
+    p_items: items,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data || !data.success || !data.transaction_id) {
+    throw new Error("Finalisasi bazar gagal diproses.");
+  }
+
+  return {
+    transactionId: String(data.transaction_id),
+    totalSales: Number(data.total_sales),
+    closingCash: Number(data.closing_cash),
+    diff: Number(data.diff),
+  };
+}

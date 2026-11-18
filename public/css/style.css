@@ -2133,3 +2133,177 @@ section {
   pointer-events: auto;
   touch-action: manipulation;
 }
+
+/* ============ Desktop Compact Layout ============ */
+@media (min-width: 768px) {
+  .page {
+    max-width: 560px;
+    padding: 28px 20px 40px;
+  }
+
+  .faq-page,
+  .about-page {
+    max-width: 560px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .grid2 {
+    gap: 12px;
+  }
+
+  .tbl-wrap {
+    max-width: 100%;
+  }
+
+  .login {
+    max-width: 370px;
+    padding: 30px 28px;
+    margin: 7vh auto 40px;
+  }
+
+  .login form > input,
+  .password-field,
+  .login form label,
+  .login-button {
+    max-width: 290px;
+  }
+
+  .login-logo {
+    width: 100px;
+    height: 82px;
+  }
+}
+
+/* ============ Rotating Red Neon Border ============ */
+@property --neon-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes neon-rotate {
+  from {
+    --neon-angle: 0deg;
+  }
+  to {
+    --neon-angle: 360deg;
+  }
+}
+
+.login form > input,
+.password-field input {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    conic-gradient(
+        from var(--neon-angle),
+        #ff003c,
+        #ff6b81,
+        #ffffff,
+        #ff1744,
+        #b00020,
+        #ff003c
+      )
+      border-box;
+  border-radius: var(--r-sm);
+  animation: neon-rotate 4s linear infinite;
+  box-shadow:
+    0 0 5px rgba(255, 0, 60, 0.2),
+    0 0 12px rgba(255, 0, 60, 0.08);
+  transition:
+    box-shadow 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.login form > input:focus,
+.password-field input:focus {
+  outline: none;
+  box-shadow:
+    0 0 5px rgba(255, 0, 60, 0.75),
+    0 0 12px rgba(255, 0, 60, 0.65),
+    0 0 24px rgba(255, 0, 60, 0.35);
+}
+
+.login form > input:hover,
+.password-field input:hover {
+  box-shadow:
+    0 0 8px rgba(255, 0, 60, 0.45),
+    0 0 16px rgba(255, 0, 60, 0.2);
+}
+
+/* ============ Neon Dark Mode ============ */
+:root[data-theme="dark"] .login form > input,
+:root[data-theme="dark"] .password-field input {
+  box-shadow:
+    0 0 7px rgba(239, 69, 96, 0.3),
+    0 0 15px rgba(239, 69, 96, 0.12);
+}
+
+:root[data-theme="dark"] .login form > input:focus,
+:root[data-theme="dark"] .password-field input:focus {
+  box-shadow:
+    0 0 6px rgba(239, 69, 96, 0.8),
+    0 0 15px rgba(239, 69, 96, 0.65),
+    0 0 28px rgba(239, 69, 96, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login form > input,
+  .password-field input {
+    animation: none;
+  }
+}
+
+@property --bg-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes login-background-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.login-page,
+body:has(.login) {
+  min-height: 100vh;
+  background: linear-gradient(
+    125deg,
+    #000000,
+    #000000,
+    #e9edf2,
+    #aa3333,
+    #000000
+  );
+  background-size: 300% 300%;
+  animation: login-background-flow 16s ease infinite;
+}
+
+.login {
+  position: relative;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 12px 40px rgba(15, 23, 42, 0.07),
+    0 2px 8px rgba(15, 23, 42, 0.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-page,
+  body:has(.login) {
+    animation: none;
+  }
+}

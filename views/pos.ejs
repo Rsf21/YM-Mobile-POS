@@ -1,4 +1,6 @@
+
 <%- include('partials/head') %>
+
 <section class="dashboard-info">
   <div class="dashboard-panel dashboard-clock">
     <strong id="dashboard-date" class="dashboard-date">Memuat tanggal...</strong>
@@ -10,7 +12,6 @@
   <h2>Kasir Bazar</h2>
   <p class="muted small">Masukkan jumlah sisa barang setelah bazar selesai.</p>
 </section>
-
 
 <section class="scanbar">
   <input
@@ -49,50 +50,15 @@
     <strong id="total">Rp 0</strong>
   </div>
 
-  <button id="btn-pay" class="btn" type="button" disabled>
-    Bayar
+  <button id="btn-recap" class="btn" type="button" disabled>
+    Lanjut ke Rekap
   </button>
-</div>
-
-<div id="sheet" class="sheet" hidden>
-  <div class="sheet-body">
-    <h2>Pembayaran Tunai</h2>
-
-    <div class="row">
-      <span class="muted">Total pembayaran</span>
-      <strong id="s-total">Rp 0</strong>
-    </div>
-
-    <div id="cash-box">
-      <label for="paid">Uang diterima</label>
-      <input
-        id="paid"
-        type="number"
-        min="0"
-        inputmode="numeric"
-        placeholder="Masukkan nominal"
-      >
-
-      <div id="quick" class="quick"></div>
-
-      <div class="row">
-        <span class="muted">Kembalian</span>
-        <strong id="change">Rp 0</strong>
-      </div>
-    </div>
-
-    <div id="pay-err" class="alert" hidden></div>
-
-    <div class="actions">
-      <button id="s-cancel" class="btn ghost" type="button">Batal</button>
-      <button id="s-ok" class="btn" type="button">Konfirmasi</button>
-    </div>
-  </div>
 </div>
 
 <div id="recap-sheet" class="sheet" hidden>
   <div class="sheet-body">
-    <h2 id="recap-title">Pembayaran Berhasil</h2>
+    <h2 id="recap-title">Rekap Bazar</h2>
+
     <p id="recap-bazaar-name" class="muted small">Rekap bazar</p>
 
     <div class="card stack">
@@ -135,6 +101,7 @@
       </p>
 
       <label for="closing-cash">Uang tunai aktual (Rp)</label>
+
       <input
         id="closing-cash"
         type="number"

@@ -5,8 +5,6 @@ import { createBazaarSale, getSale, listByBazaar } from "../models/sale.model";
 const EGG_SKU = "0000000163096";
 
 const body = z.object({
-  method: z.literal("cash"),
-  paid: z.number().int().min(0).max(100000000),
   items: z
     .array(
       z.object({
@@ -23,47 +21,33 @@ export async function apiCheckout(req: Request, res: Response) {
 
   if (!parsed.success) {
     return res.status(400).json({
-      error: "Pembayaran hanya menerima tunai atau data transaksi tidak valid",
+      error: "Data transaksi tidak valid",
     });
   }
 
-  const { method, paid, items } = parsed.data;
-
-  const invalidItem = items.find((item) => {
-    if (item.sku === EGG_SKU) {
-      return Number(item.qty.toFixed(3)) !== item.qty;
+  for (const item of parsed.data.items) {
+    if (
+      item.sku === EGG_SKU
+        ? Math.round(item.qty * 1000) !== item.qty * 1000
+        : !Number.isInteger(item.qty)
+    ) {
+      return res.status(400).json({
+        error:
+          item.sku === EGG_SKU
+            ? "Berat telur maksimal 3 angka desimal"
+            : "Jumlah produk PCS harus bilangan bulat",
+      });
     }
-
-    return !Number.isInteger(item.qty);
-  });
-
-  if (invalidItem) {
-    return res.status(400).json({
-      error:
-        invalidItem.sku === EGG_SKU
-          ? "Berat telur maksimal 3 angka desimal"
-          : "Jumlah produk PCS harus bilangan bulat",
-    });
   }
 
-  try {
-    const id = await createBazaarSale(
-      req.session!.bazaarId,
-      req.session!.storeId,
-      req.session!.staffId,
-      method,
-      paid,
-      items,
-    );
+  const id = await createBazaarSale(
+    req.session!.bazaarId,
+    req.session!.storeId,
+    req.session!.staffId,
+    parsed.data.items,
+  );
 
-    return res.json({ id });
-  } catch (e: any) {
-    console.error("CHECKOUT ERROR:", e);
-
-    return res.status(400).json({
-      error: e.message || "Transaksi gagal disimpan",
-    });
-  }
+  return res.json({ id });
 }
 
 export async function receiptPage(req: Request, res: Response) {
@@ -75,20 +59,21 @@ export async function receiptPage(req: Request, res: Response) {
     });
   }
 
-  res.render("receipt", { sale });
+  return res.render("receipt", {
+    sale,
+  });
 }
 
 export async function historyPage(req: Request, res: Response) {
-  const rows = await listByBazaar(req.session!.bazaarId);
+  const bazaarId = req.session!.bazaarId;
 
-  const total = rows.reduce(
-    (amount: number, row: any) => amount + Number(row.total),
-    0,
-  );
+  if (!bazaarId) {
+    return res.redirect("/bazar");
+  }
 
-  res.render("history", {
-    rows,
-    total,
-    active: "history",
+  const transactions = await listByBazaar(bazaarId);
+
+  return res.render("history", {
+    transactions,
   });
 }

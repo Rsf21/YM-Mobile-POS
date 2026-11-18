@@ -26,6 +26,8 @@
   var searchTimer = null;
   var currentReceiptId = null;
   var currentTotalSales = 0;
+  var currentFinalItems = [];
+  var isSubmitting = false;
 
   function isEgg(p) {
     return (
@@ -118,7 +120,8 @@
     $("count").textContent = soldCount();
     $("total").textContent = rp(total());
 
-    $("btn-pay").disabled = cart.size === 0 || total() <= 0 || !allValid();
+    $("btn-recap").disabled =
+      cart.size === 0 || total() <= 0 || !allValid() || isSubmitting;
   }
 
   function updateItem(item, value, elements) {
@@ -323,71 +326,66 @@
       });
   }
 
-  function showRecap(data, receiptId, errorMessage) {
-    $("sheet").hidden = true;
+  function showRecap(data, soldItems) {
     $("recap-sheet").hidden = false;
 
-    $("recap-error").hidden = !errorMessage;
-    $("recap-error").textContent = errorMessage || "";
+    currentReceiptId = null;
+    currentFinalItems = soldItems.map(function (item) {
+      return {
+        sku: item.sku,
+        qty: item.qty,
+      };
+    });
 
+    $("recap-error").hidden = true;
     $("close-error").hidden = true;
     $("closed-result").hidden = true;
     $("close-bazaar-section").hidden = false;
+
     $("btn-close-bazaar").disabled = false;
     $("btn-close-bazaar").textContent = "Tutup Bazar";
+
     $("recap-back").hidden = false;
+    $("recap-receipt").hidden = true;
+    $("recap-title").textContent = "Rekap Bazar";
+
+    $("recap-bazaar-name").textContent = data.bazaar.name;
+    $("recap-opening").textContent = rp(data.recap.openingCash);
+
+    currentTotalSales = total();
+
+    $("recap-total").textContent = rp(currentTotalSales);
+    $("closing-total").textContent = rp(currentTotalSales);
+
+    $("closing-cash").value = "";
+    $("closing-diff").textContent = "Belum dihitung";
 
     var tbody = $("recap-items");
     tbody.innerHTML = "";
 
-    if (data && data.success) {
-      currentTotalSales = Number(data.recap.totalSales) || 0;
+    soldItems.forEach(function (item) {
+      var tr = document.createElement("tr");
 
-      $("recap-bazaar-name").textContent = data.bazaar.name;
-      $("recap-opening").textContent = rp(data.recap.openingCash);
-      $("recap-total").textContent = rp(currentTotalSales);
-      $("closing-total").textContent = rp(currentTotalSales);
+      var name = document.createElement("td");
+      name.textContent = item.name;
 
-      $("closing-cash").value = "";
-      $("closing-diff").textContent = "Belum dihitung";
+      var sold = document.createElement("td");
+      sold.textContent = formatQty(item.qty) + " " + item.unit;
 
-      var items = Array.isArray(data.items) ? data.items : [];
+      var remaining = document.createElement("td");
+      remaining.textContent = formatQty(item.remaining) + " " + item.unit;
 
-      items.forEach(function (item) {
-        var tr = document.createElement("tr");
+      tr.appendChild(name);
+      tr.appendChild(sold);
+      tr.appendChild(remaining);
 
-        var name = document.createElement("td");
-        name.textContent = item.name;
+      tbody.appendChild(tr);
+    });
 
-        var sold = document.createElement("td");
-        sold.textContent = formatQty(item.sold) + " " + item.unit;
-
-        var remaining = document.createElement("td");
-        remaining.textContent = formatQty(item.remaining) + " " + item.unit;
-
-        tr.appendChild(name);
-        tr.appendChild(sold);
-        tr.appendChild(remaining);
-
-        tbody.appendChild(tr);
-      });
-
-      if (items.length === 0) {
-        tbody.innerHTML =
-          '<tr><td colspan="3" class="center">Belum ada rincian barang.</td></tr>';
-      }
-    } else {
-      currentTotalSales = 0;
-
+    if (soldItems.length === 0) {
       tbody.innerHTML =
-        '<tr><td colspan="3" class="center">Rekap barang belum tersedia.</td></tr>';
-
-      $("close-bazaar-section").hidden = true;
+        '<tr><td colspan="3" class="center">Belum ada rincian barang.</td></tr>';
     }
-
-    $("recap-receipt").onclick = function () {
-      location.href = "/struk/" + encodeURIComponent(receiptId);
-    };
   }
 
   function updateClosingPreview() {
@@ -436,7 +434,17 @@
       return;
     }
 
-    if (!window.confirm("Sudah yakin dengan hasil bazar?")) {
+    if (currentFinalItems.length === 0) {
+      $("close-error").textContent = "Tidak ada barang terjual untuk disimpan.";
+      $("close-error").hidden = false;
+      return;
+    }
+
+    if (
+      !window.confirm(
+        "Sudah yakin dengan hasil bazar? Bazar akan ditutup dan transaksi disimpan.",
+      )
+    ) {
       return;
     }
 
@@ -452,6 +460,7 @@
       },
       body: JSON.stringify({
         closing_cash: amount,
+        items: currentFinalItems,
       }),
     })
       .then(function (response) {
@@ -473,6 +482,8 @@
           throw new Error(data.message || "Gagal menutup bazar.");
         }
 
+        currentReceiptId = data.transactionId || null;
+
         $("close-bazaar-section").hidden = true;
         $("closed-result").hidden = false;
 
@@ -489,9 +500,11 @@
         }
 
         $("closed-diff").textContent = diffText;
+
         $("invoice-link").href = data.invoiceUrl;
         $("invoice-link").hidden = false;
 
+        $("recap-receipt").hidden = !currentReceiptId;
         $("recap-title").textContent = "Bazar Selesai";
         $("recap-back").hidden = true;
 
@@ -685,189 +698,83 @@
       });
   };
 
-  function openSheet() {
-    if ($("btn-pay").disabled) return;
+  function submitBazaarRecap() {
+    var button = $("btn-recap");
 
-    $("s-total").textContent = rp(total());
-    $("paid").value = "";
-    $("change").textContent = rp(0);
-    $("pay-err").hidden = true;
-
-    var amount = total();
-
-    var options = [
-      amount,
-      Math.ceil(amount / 5000) * 5000,
-      Math.ceil(amount / 10000) * 10000,
-      Math.ceil(amount / 50000) * 50000,
-      Math.ceil(amount / 100000) * 100000,
-    ];
-
-    var seen = {};
-
-    $("quick").innerHTML = "";
-
-    options.forEach(function (value) {
-      if (seen[value]) return;
-
-      seen[value] = true;
-
-      var button = document.createElement("button");
-      button.type = "button";
-      button.textContent = rp(value);
-
-      button.onclick = function () {
-        $("paid").value = value;
-        calc();
-      };
-
-      $("quick").appendChild(button);
-    });
-
-    $("sheet").hidden = false;
-  }
-
-  function calc() {
-    var paid = Number($("paid").value.replace(/\D/g, "")) || 0;
-
-    $("change").textContent = rp(Math.max(0, paid - total()));
-  }
-
-  $("paid").addEventListener("input", calc);
-
-  $("btn-pay").onclick = openSheet;
-
-  $("s-cancel").onclick = function () {
-    $("sheet").hidden = true;
-  };
-
-  $("recap-back").onclick = function () {
-    $("recap-sheet").hidden = true;
-    currentReceiptId = null;
-    loadCatalog();
-    input.focus();
-  };
-
-  $("s-ok").onclick = function () {
-    var button = $("s-ok");
+    if (isSubmitting) return;
 
     if (!allValid()) {
-      $("pay-err").textContent =
-        "Periksa kembali jumlah sisa barang yang belum valid.";
-      $("pay-err").hidden = false;
+      flash("Periksa kembali jumlah sisa barang yang belum valid.");
       return;
     }
 
     var amount = total();
 
     if (amount <= 0) {
-      $("pay-err").textContent = "Belum ada barang yang terjual.";
-      $("pay-err").hidden = false;
+      flash("Belum ada barang yang terjual.");
       return;
     }
 
-    var paid = Number($("paid").value.replace(/\D/g, "")) || 0;
-
-    if (paid < amount) {
-      $("pay-err").textContent = "Uang pembayaran kurang.";
-      $("pay-err").hidden = false;
-      return;
-    }
-
-    var items = [];
+    var soldItems = [];
 
     cart.forEach(function (item) {
       var sold = getSold(item);
 
       if (sold > 0) {
-        items.push({
+        soldItems.push({
           sku: item.sku,
           qty: sold,
+          name: item.name,
+          remaining: item.remaining,
+          unit: item.unit,
         });
       }
     });
 
-    if (items.length === 0) {
-      $("pay-err").textContent = "Belum ada barang yang terjual.";
-      $("pay-err").hidden = false;
+    if (soldItems.length === 0) {
+      flash("Belum ada barang yang terjual.");
       return;
     }
 
+    isSubmitting = true;
     button.disabled = true;
-    button.textContent = "Menyimpan...";
+    button.textContent = "Memuat Rekap...";
 
-    fetch("/api/checkout", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        method: "cash",
-        paid: paid,
-        items: items,
-      }),
-    })
-      .then(function (response) {
-        return response.json().then(function (data) {
-          if (response.status === 401) {
-            location.href = "/login";
-            throw new Error("auth");
-          }
-
-          return {
-            ok: response.ok,
-            data: data,
-          };
-        });
-      })
-      .then(function (result) {
-        if (!result.ok) {
-          throw new Error(
-            result.data.error ||
-              result.data.message ||
-              "Gagal menyimpan transaksi",
-          );
+    get("/api/bazaar/recap")
+      .then(function (data) {
+        if (!data.success) {
+          throw new Error(data.message || "Gagal memuat rekap bazar.");
         }
 
-        var receiptId = result.data.id;
-
-        if (!receiptId) {
-          throw new Error(
-            "Transaksi tersimpan, tetapi ID struk tidak diterima.",
-          );
-        }
-
-        return get("/api/bazaar/recap")
-          .then(function (data) {
-            button.disabled = false;
-            button.textContent = "Konfirmasi";
-
-            showRecap(data, receiptId);
-          })
-          .catch(function (error) {
-            if (error.message === "auth") {
-              throw error;
-            }
-
-            button.disabled = false;
-            button.textContent = "Konfirmasi";
-
-            showRecap(
-              null,
-              receiptId,
-              "Transaksi berhasil disimpan, tetapi rekap gagal dimuat. Lu tetap bisa melihat struk.",
-            );
-          });
+        showRecap(data, soldItems);
       })
       .catch(function (error) {
-        var el = $("pay-err");
-        el.textContent = error.message;
-        el.hidden = false;
-
-        button.disabled = false;
-        button.textContent = "Konfirmasi";
+        if (error.message !== "auth") {
+          flash(error.message);
+        }
+      })
+      .finally(function () {
+        isSubmitting = false;
+        renderSummary();
+        button.textContent = "Lanjut ke Rekap";
       });
+  }
+
+  $("btn-recap").onclick = submitBazaarRecap;
+
+  $("recap-back").onclick = function () {
+    $("recap-sheet").hidden = true;
+
+    currentReceiptId = null;
+    currentFinalItems = [];
+
+    input.focus();
+  };
+
+  $("recap-receipt").onclick = function () {
+    if (!currentReceiptId) return;
+
+    location.href = "/struk/" + encodeURIComponent(currentReceiptId);
   };
 
   render();

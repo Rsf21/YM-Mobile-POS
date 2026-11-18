@@ -9,6 +9,7 @@ import {
   listItems,
   summary,
   getBazaarInvoiceData,
+  finalizeBazaar,
 } from "../models/bazaar.model";
 
 const num = (v: unknown) => {
@@ -131,7 +132,8 @@ export async function apiBazaarRecap(req: Request, res: Response) {
 
 export async function apiBazaarClose(req: Request, res: Response) {
   const id = req.session!.bazaarId;
-  const closing = num(req.body.closing_cash);
+  const closing = Number(req.body.closing_cash);
+  const items = req.body.items;
 
   if (!id) {
     return res.status(400).json({
@@ -140,51 +142,96 @@ export async function apiBazaarClose(req: Request, res: Response) {
     });
   }
 
-  if (!Number.isFinite(closing) || closing > 1000000000) {
+  if (!Number.isSafeInteger(closing) || closing < 0 || closing > 1000000000) {
     return res.status(400).json({
       success: false,
       message: "Nominal uang tunai tidak valid",
     });
   }
 
-  const b = await getBazaar(req.session!.storeId, id);
+  if (!Array.isArray(items) || items.length === 0 || items.length > 200) {
+    return res.status(400).json({
+      success: false,
+      message: "Data barang terjual tidak valid",
+    });
+  }
 
-  if (!b || b.status !== "open") {
+  const seen = new Set<string>();
+
+  for (const item of items) {
+    if (
+      !item ||
+      typeof item.sku !== "string" ||
+      item.sku.trim().length === 0 ||
+      item.sku.length > 32 ||
+      typeof item.qty !== "number" ||
+      !Number.isFinite(item.qty) ||
+      item.qty <= 0 ||
+      item.qty > 999
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Data barang terjual tidak valid",
+      });
+    }
+
+    if (seen.has(item.sku)) {
+      return res.status(400).json({
+        success: false,
+        message: "Terdapat SKU barang yang duplikat",
+      });
+    }
+
+    seen.add(item.sku);
+
+    if (
+      item.sku === "0000000163096"
+        ? Math.round(item.qty * 1000) !== item.qty * 1000
+        : !Number.isInteger(item.qty)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          item.sku === "0000000163096"
+            ? "Berat telur maksimal 3 angka desimal"
+            : "Jumlah produk PCS harus bilangan bulat",
+      });
+    }
+  }
+
+  const bazaar = await getBazaar(req.session!.storeId, id);
+
+  if (!bazaar || bazaar.status !== "open") {
     return res.status(404).json({
       success: false,
       message: "Bazar tidak ditemukan atau sudah ditutup",
     });
   }
 
-  const sum = await summary(id);
-  const totalSales = sum.reduce((total, row) => total + row.total, 0);
-  const diff = closing - totalSales;
-
-  const ok = await closeBazaar(req.session!.storeId, id, closing);
-
-  if (!ok) {
-    return res.status(409).json({
-      success: false,
-      message: "Bazar sudah ditutup atau gagal diproses",
-    });
-  }
+  const result = await finalizeBazaar(
+    id,
+    req.session!.storeId,
+    req.session!.staffId,
+    closing,
+    items,
+  );
 
   if (req.session!.bazaarId === id) {
     req.session!.bazaarId = null;
   }
 
-  res.json({
+  return res.json({
     success: true,
     message: "Bazar berhasil ditutup",
     bazaar: {
-      id: b.id,
-      name: b.name,
+      id: bazaar.id,
+      name: bazaar.name,
     },
     recap: {
-      totalSales,
-      closingCash: closing,
-      diff,
-      status: diff === 0 ? "pas" : diff > 0 ? "lebih" : "kurang",
+      totalSales: result.totalSales,
+      closingCash: result.closingCash,
+      diff: result.diff,
+      status: result.diff === 0 ? "pas" : result.diff > 0 ? "lebih" : "kurang",
     },
     invoiceUrl: `/bazar/${id}/invoice.pdf`,
   });

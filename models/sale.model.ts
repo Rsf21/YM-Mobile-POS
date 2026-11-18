@@ -9,16 +9,12 @@ export async function createBazaarSale(
   bazaarId: string,
   storeId: string,
   staffId: string,
-  method: string,
-  paid: number,
   items: CartItem[],
 ): Promise<string> {
   const { data, error } = await db.rpc("create_bazaar_sale", {
     p_bazaar: bazaarId,
     p_store: storeId,
     p_staff: staffId,
-    p_method: method,
-    p_paid: paid,
     p_items: items,
   });
 
