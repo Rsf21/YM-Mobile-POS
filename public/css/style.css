@@ -2280,14 +2280,14 @@ body:has(.login) {
   min-height: 100vh;
   background: linear-gradient(
     125deg,
+    #ebff0e,
+    #d21b1b,
     #000000,
-    #000000,
-    #e9edf2,
-    #aa3333,
+    #989b82,
     #000000
   );
   background-size: 300% 300%;
-  animation: login-background-flow 16s ease infinite;
+  animation: login-background-flow 5s ease infinite;
 }
 
 .login {
