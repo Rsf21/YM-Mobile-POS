@@ -1,0 +1,31 @@
+<%- include('partials/head') %>
+<% const rp = (n) => 'Rp ' + Number(n).toLocaleString('id-ID'); const pages = Math.max(1, Math.ceil(total / size)); %>
+<h2>Produk</h2>
+<form method="get" class="scanbar">
+  <input name="q" value="<%= q %>" placeholder="Cari nama atau SKU">
+  <button class="btn ghost" type="submit">Cari</button>
+</form>
+<ul class="list">
+  <% rows.forEach(p => { %>
+  <li class="prod">
+    <div>
+      <div><%= p.name %></div>
+      <div class="muted small">SKU <%= p.sku %></div>
+    </div>
+    <form method="post" action="/produk/ubah" class="stock">
+      <input type="hidden" name="sku" value="<%= p.sku %>">
+      <input name="price" value="<%= p.price %>" inputmode="numeric" aria-label="Harga">
+      <input name="stock" value="<%= p.stock === null ? '' : p.stock %>" placeholder="stok" inputmode="numeric" aria-label="Stok">
+      <button class="btn ghost" type="submit">Simpan</button>
+    </form>
+  </li>
+  <% }) %>
+</ul>
+<div class="pager">
+  <% if (page > 1) { %><a href="?page=<%= page - 1 %>&q=<%= encodeURIComponent(q) %>">Sebelumnya</a><% } %>
+  <span><%= page %> / <%= pages %></span>
+  <% if (page < pages) { %><a href="?page=<%= page + 1 %>&q=<%= encodeURIComponent(q) %>">Berikutnya</a><% } %>
+</div>
+<%- include('partials/foot') %>
+</body>
+</html>

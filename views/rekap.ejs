@@ -1,0 +1,133 @@
+
+<%- include('partials/head') %>
+
+<%
+const rp = (n) => 'Rp ' + Math.round(Number(n) || 0).toLocaleString('id-ID');
+
+const qty = (n) => Number(Number(n || 0).toFixed(3)).toLocaleString('id-ID', {
+  maximumFractionDigits: 3
+});
+
+const totalSales = Number(cash || 0) + Number(qris || 0) + Number(debit || 0);
+%>
+
+<main class="page">
+  <section>
+    <h2>
+      <%= b.name %>
+      <span class="pill"><%= isOpen ? 'berjalan' : 'selesai' %></span>
+    </h2>
+  </section>
+
+  <section class="grid2">
+    <div class="stat">
+      <span>Uang kembalian awal</span>
+      <strong><%= rp(b.opening_cash) %></strong>
+    </div>
+
+    <div class="stat">
+      <span>Penjualan tunai</span>
+      <strong><%= rp(cash) %></strong>
+    </div>
+
+    <div class="stat">
+      <span>QRIS</span>
+      <strong><%= rp(qris) %></strong>
+    </div>
+
+    <div class="stat">
+      <span>Debit</span>
+      <strong><%= rp(debit) %></strong>
+    </div>
+
+    <div class="stat">
+      <span>Total penjualan (<%= trx %> transaksi)</span>
+      <strong><%= rp(totalSales) %></strong>
+    </div>
+
+    <div class="stat">
+      <span>Uang tunai seharusnya</span>
+      <strong><%= rp(expected) %></strong>
+    </div>
+
+    
+  </section>
+
+  <% if (isOpen) { %>
+    <section class="card stack" style="margin-top:12px">
+      <strong>Tutup bazar</strong>
+
+      <div class="muted small">
+        Hitung uang tunai di tangan, lalu isi nominal di bawah. Setelah ditutup, kasir bazar ini tidak bisa dipakai lagi.
+      </div>
+
+      <form method="post" action="/bazar/<%= b.id %>/tutup" class="stack">
+        <label>
+          Uang tunai di tangan (Rp)
+          <input
+            name="closing_cash"
+            type="number"
+            min="0"
+            inputmode="numeric"
+            required
+          >
+        </label>
+
+        <button class="btn" type="submit">
+          Tutup bazar
+        </button>
+      </form>
+    </section>
+  <% } else { %>
+    <section class="card row" style="margin-top:12px">
+      <span>Uang tunai dihitung <%= rp(b.closing_cash) %></span>
+
+      <strong class="<%= diff === 0 ? 'good' : 'bad' %>">
+        <%= diff === 0 ? 'Pas' : (diff > 0 ? 'Lebih ' : 'Kurang ') + rp(Math.abs(diff)) %>
+      </strong>
+    </section>
+  <% } %>
+
+  <section style="margin-top:20px">
+    <h3>Rincian barang</h3>
+
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Barang</th>
+            <th>Bawa</th>
+            <th>Terjual</th>
+            <th>Sisa</th>
+            <th>Omzet</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% items.forEach(i => { %>
+            <tr>
+              <td><%= i.name %></td>
+              <td><%= qty(i.brought) %></td>
+              <td><%= qty(i.sold) %></td>
+              <td><%= qty(i.brought - i.sold) %></td>
+              <td><%= rp(i.price * i.sold) %></td>
+            </tr>
+          <% }) %>
+
+          <% if (!items.length) { %>
+            <tr>
+              <td colspan="5" style="text-align:center">
+                Belum ada barang bazar.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <p>unduh invoice</p>
+  </section>
+</main>
+
+<%- include('partials/foot') %>
+</body>
+</html>

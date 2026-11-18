@@ -1,0 +1,14 @@
+<%- include('partials/head') %>
+<section class="login">
+  <h1>YM Mobile POS</h1>
+  <p class="muted">Masuk dengan akun kasir</p>
+  <% if (error) { %><div class="alert"><%= error %></div><% } %>
+  <form method="post" action="/login" class="stack">
+    <label>Username<input name="username" autocomplete="username" required autofocus></label>
+    <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+    <button class="btn" type="submit">Masuk</button>
+  </form>
+</section>
+</main>
+</body>
+</html>

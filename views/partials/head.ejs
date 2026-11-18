@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <meta name="theme-color" content="#f7f7f8">
+
+  <title>YM Mobile POS</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <script src="/js/theme-init.js"></script>
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<% if (typeof user !== 'undefined' && user) { %>
+
+<header class="topbar">
+  <div class="brand-area">
+    <img
+      src="/images/TECH/yomartpng.png"
+      alt="Logo Yomart"
+      class="brand-logo"
+    >
+  </div>
+
+  <button
+    class="menu-toggle"
+    id="menu-toggle"
+    type="button"
+    aria-label="Buka menu"
+    aria-expanded="false"
+    aria-controls="side-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</header>
+
+<div class="menu-backdrop" id="menu-backdrop" hidden></div>
+
+<aside
+  class="side-menu"
+  id="side-menu"
+  aria-hidden="true"
+>
+
+  <div class="side-menu-header">
+    <div>
+      <strong>Yomart</strong>
+      <span>Mobile POS</span>
+    </div>
+
+    <button
+      class="menu-close"
+      id="menu-close"
+      type="button"
+      aria-label="Tutup menu"
+    >
+      &times;
+    </button>
+  </div>
+
+  <div class="side-menu-profile">
+    <span class="profile-label">TOKO AKTIF</span>
+
+    <strong><%= user.storeName %></strong>
+
+    <% if (typeof bazaar !== 'undefined' && bazaar) { %>
+      <span><%= bazaar.name %></span>
+    <% } %>
+  </div>
+
+  <nav class="side-nav">
+
+    <span class="side-nav-label">MENU UTAMA</span>
+
+    <a
+      href="/"
+      class="<%= typeof active !== 'undefined' && active === 'pos' ? 'current' : '' %>"
+    >
+      <span class="nav-icon">⌂</span>
+      <span>Kasir</span>
+    </a>
+
+    <a
+      href="/barang"
+      class="<%= typeof active !== 'undefined' && active === 'items' ? 'current' : '' %>"
+    >
+      <span class="nav-icon">▤</span>
+      <span>Barang Bazar</span>
+    </a>
+
+    <a
+      href="/riwayat"
+      class="<%= typeof active !== 'undefined' && active === 'history' ? 'current' : '' %>"
+    >
+      <span class="nav-icon">◷</span>
+      <span>Riwayat Transaksi</span>
+    </a>
+
+    <a href="/bazar">
+      <span class="nav-icon">▣</span>
+      <span>Daftar Bazar</span>
+    </a>
+
+    <a
+      href="/faq"
+      class="<%= typeof active !== 'undefined' && active === 'faq' ? 'current' : '' %>"
+    >
+      <span class="nav-icon">?</span>
+      <span>Pusat Bantuan / FAQ</span>
+    </a>
+
+    <a
+      href="/about"
+      class="<%= typeof active !== 'undefined' && active === 'about' ? 'current' : '' %>"
+    >
+      <span class="nav-icon">i</span>
+      <span>Tentang Aplikasi</span>
+    </a>
+
+  </nav>
+
+  <div class="side-menu-theme">
+
+    <div class="side-menu-theme-info">
+      <strong>Tampilan</strong>
+      <span>Mode terang atau gelap</span>
+    </div>
+
+    <button
+      class="theme-toggle"
+      id="theme-toggle"
+      type="button"
+      aria-label="Ganti tema"
+      title="Ganti tema"
+    >
+      <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l-1.42 1.42m11.3-11.3 1.42-1.42"></path>
+      </svg>
+
+      <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"></path>
+      </svg>
+    </button>
+
+  </div>
+
+  <div class="side-menu-footer">
+
+    <form method="post" action="/logout">
+      <button class="logout-button" type="submit">
+        <span>↪</span>
+        Keluar dari akun
+      </button>
+    </form>
+
+  </div>
+
+</aside>
+
+<% } %>
+
+<main class="page">

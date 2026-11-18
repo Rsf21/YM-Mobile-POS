@@ -1,0 +1,375 @@
+<%- include("partials/head") %>
+
+<section class="faq-page">
+
+  <div class="faq-header">
+    <span class="faq-eyebrow">YOMART MOBILE POS</span>
+    <h1>Pusat Bantuan</h1>
+    <p>Panduan penggunaan YM Mobile POS untuk membantu operasional bazar dan transaksi.</p>
+  </div>
+
+  <div class="faq-search">
+    <span class="faq-search-icon">⌕</span>
+    <input
+      type="search"
+      id="faqSearch"
+      placeholder="Cari pertanyaan..."
+      autocomplete="off"
+    >
+  </div>
+
+  <div class="faq-categories" id="faqCategories">
+    <button class="faq-category active" data-category="all">Semua</button>
+    <button class="faq-category" data-category="account">Akun</button>
+    <button class="faq-category" data-category="kasir">Kasir</button>
+    <button class="faq-category" data-category="barang">Barang & PLU</button>
+    <button class="faq-category" data-category="bazar">Bazar</button>
+    <button class="faq-category" data-category="penutupan">Penutupan Bazar</button>
+    <button class="faq-category" data-category="invoice">Invoice</button>
+    <button class="faq-category" data-category="riwayat">Riwayat</button>
+  </div>
+
+  <div class="faq-list" id="faqList">
+
+    <article class="faq-item" data-category="account">
+      <button class="faq-question">
+        <span>Bagaimana cara login ke aplikasi?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Masukkan username dan password akun yang telah diberikan oleh Developer.
+          Setelah berhasil login, kamu akan diarahkan ke halaman utama aplikasi.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="account">
+      <button class="faq-question">
+        <span>Bagaimana jika saya lupa password?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Hubungi Developer untuk mendapatkan bantuan pengaturan ulang password.
+          Jangan membagikan password akun kepada orang lain.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="account">
+      <button class="faq-question">
+        <span>Apakah akun bisa digunakan oleh beberapa orang?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Setiap pengguna sebaiknya menggunakan akun masing-masing agar aktivitas
+          dan transaksi dapat tercatat sesuai identitas pengguna yang login.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="kasir">
+      <button class="faq-question">
+        <span>Bagaimana cara memulai transaksi?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Pastikan kamu sudah login dan memilih bazar yang aktif. Buka halaman
+          Kasir, kemudian masukkan barang menggunakan scanner PLU atau fitur
+          pencarian barang. Periksa daftar belanja sebelum melanjutkan checkout.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="kasir">
+      <button class="faq-question">
+        <span>Bagaimana cara menambahkan barang ke transaksi?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Scan PLU barang menggunakan scanner atau cari barang melalui fitur
+          pencarian. Setelah barang ditemukan, masukkan jumlah yang dibeli
+          pelanggan. Barang akan masuk ke daftar transaksi.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="kasir">
+      <button class="faq-question">
+        <span>Apa yang harus diperiksa sebelum checkout?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Periksa nama barang, jumlah, harga, dan total pembayaran. Pastikan
+          seluruh barang yang dibeli pelanggan sudah tercatat dengan benar
+          sebelum menyelesaikan transaksi.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="barang">
+      <button class="faq-question">
+        <span>Bagaimana cara scan PLU barang?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Gunakan scanner untuk membaca kode PLU barang. Pastikan kode terlihat
+          jelas saat dipindai. Jika diperlukan, kamu juga dapat menggunakan
+          fitur pencarian barang atau memasukkan PLU secara manual apabila tersedia.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="barang">
+      <button class="faq-question">
+        <span>Kenapa barang tidak ditemukan setelah scan?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Periksa kembali kode PLU yang terbaca dan pastikan barang tersedia
+          di katalog. Jika barang tetap tidak ditemukan, hubungi Developer
+          untuk pemeriksaan data barang.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="barang">
+      <button class="faq-question">
+        <span>Bagaimana pencatatan barang dengan satuan KG?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Barang dengan satuan KG dicatat menggunakan berat, termasuk jumlah
+          desimal jika diperlukan. Contohnya, 2,5 KG dicatat sebagai 2.5.
+          Harga yang dimasukkan merupakan harga per kilogram.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="barang">
+      <button class="faq-question">
+        <span>Bagaimana cara memasukkan telur ke barang bazar?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Telur menggunakan PLU 0000000163096 dengan satuan KG. Masukkan jumlah
+          berdasarkan berat telur yang dibawa, misalnya 2.5 KG, kemudian
+          masukkan harga per kilogram sesuai ketentuan.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="bazar">
+      <button class="faq-question">
+        <span>Bagaimana cara membuat bazar baru?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Buka menu Daftar Bazar, kemudian buat bazar baru dengan mengisi
+          informasi yang diminta. Setelah bazar berhasil dibuat, pilih bazar
+          tersebut untuk mulai mengelola barang dan melakukan transaksi.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="bazar">
+      <button class="faq-question">
+        <span>Bagaimana cara menambahkan barang yang dibawa ke bazar?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Pilih bazar yang akan digunakan, kemudian buka pengelolaan barang bazar.
+          Scan atau cari PLU barang, masukkan jumlah barang yang dibawa,
+          lalu simpan pencatatan tersebut.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="bazar">
+      <button class="faq-question">
+        <span>Apakah penambahan barang bazar mengurangi stok toko asal?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Tidak. Pencatatan barang bazar dilakukan secara terpisah dari stok
+          toko asal. Menambahkan jumlah barang yang dibawa ke bazar tidak
+          otomatis mengurangi ataupun mengubah stok toko.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="bazar">
+      <button class="faq-question">
+        <span>Apa perbedaan barang dibawa, terjual, dan sisa?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Barang dibawa adalah jumlah awal barang yang disiapkan untuk bazar.
+          Barang terjual merupakan jumlah yang berhasil dijual melalui transaksi.
+          Barang sisa adalah jumlah barang yang belum terjual.
+        </p>
+        <p>
+          Perhitungannya: Barang Sisa = Barang Dibawa - Barang Terjual.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="bazar">
+      <button class="faq-question">
+        <span>Bagaimana jika barang belum terjual sama sekali?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Barang yang belum terjual tetap tercatat dalam data bazar.
+          Jumlah terjual akan bernilai nol dan jumlah sisa tetap sama
+          dengan jumlah barang yang dibawa.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="penutupan">
+      <button class="faq-question">
+        <span>Bagaimana cara menutup bazar?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Buka bazar yang sedang aktif, kemudian masuk ke halaman rekap atau
+          penutupan bazar. Periksa ringkasan penjualan dan masukkan jumlah
+          uang kas akhir sesuai uang yang dihitung. Setelah itu, lanjutkan
+          proses penutupan bazar.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="penutupan">
+      <button class="faq-question">
+        <span>Apa fungsi uang kas akhir saat menutup bazar?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Uang kas akhir digunakan untuk mencatat jumlah uang yang dihitung
+          ketika bazar selesai. Data tersebut digunakan dalam rekap untuk
+          melihat perbedaan antara uang kas akhir dan total penjualan.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="penutupan">
+      <button class="faq-question">
+        <span>Apa arti selisih uang lebih atau kurang?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Selisih menunjukkan perbedaan antara uang kas akhir yang dicatat
+          dan total penjualan. Nilai positif menunjukkan lebih, nilai negatif
+          menunjukkan kurang, sedangkan nilai nol menunjukkan pas.
+          Periksa kembali perhitungan uang jika terdapat selisih.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="invoice">
+      <button class="faq-question">
+        <span>Bagaimana cara mengunduh invoice bazar?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Setelah bazar berhasil ditutup, buka data bazar yang sudah selesai
+          dan gunakan fitur invoice PDF untuk membuka atau mengunduh dokumen
+          invoice.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="invoice">
+      <button class="faq-question">
+        <span>Apa saja informasi yang terdapat di invoice bazar?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Invoice memuat informasi bazar, toko, petugas, ringkasan penjualan,
+          jumlah transaksi, serta rincian barang. Rincian barang mencakup
+          jumlah dibawa, terjual, sisa, harga, dan subtotal.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="invoice">
+      <button class="faq-question">
+        <span>Apakah invoice bazar bisa dicetak?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Bisa. Invoice tersedia dalam format PDF sehingga dapat dibuka,
+          disimpan, atau dicetak melalui perangkat yang mendukung dokumen PDF
+          dan terhubung dengan printer.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="riwayat">
+      <button class="faq-question">
+        <span>Di mana saya bisa melihat transaksi sebelumnya?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Buka menu Riwayat Transaksi untuk melihat catatan transaksi yang
+          sudah dilakukan. Pastikan kamu memilih bazar yang sesuai apabila
+          aplikasi meminta pemilihan bazar.
+        </p>
+      </div>
+    </article>
+
+    <article class="faq-item" data-category="riwayat">
+      <button class="faq-question">
+        <span>Apakah transaksi yang sudah selesai masih bisa dilihat?</span>
+        <span class="faq-chevron">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>
+          Transaksi yang sudah selesai dapat diperiksa melalui menu Riwayat
+          Transaksi sesuai data yang tersedia pada aplikasi.
+        </p>
+      </div>
+    </article>
+
+    <div class="faq-empty" id="faqEmpty" hidden>
+      <strong>Pertanyaan tidak ditemukan</strong>
+      <p>Coba gunakan kata kunci yang berbeda.</p>
+    </div>
+
+  </div>
+
+  <div class="faq-contact">
+    <div>
+      <strong>Masih butuh bantuan?</strong>
+      <p>Hubungi Developer jika kamu mengalami kendala atau menemukan kesalahan pada aplikasi.</p>
+    </div>
+  </div>
+
+</section>
+
+<script src="/js/faq.js" defer></script>
+
+<%- include("partials/foot") %>

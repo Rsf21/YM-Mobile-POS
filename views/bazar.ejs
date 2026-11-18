@@ -1,0 +1,38 @@
+<%- include('partials/head') %>
+<%- include('partials/dashboard-info') %>
+<% const rp = (n) => 'Rp ' + Number(n).toLocaleString('id-ID'); %>
+<h2>Bazar</h2>
+<% if (err) { %><div class="alert"><%= err %></div><% } %>
+<section class="card stack">
+  <strong>Mulai bazar baru</strong>
+  <form method="post" action="/bazar" class="stack">
+    <label>Nama bazar atau lokasi<input name="name" maxlength="60" required></label>
+    <label>Uang kembalian yang dibawa (Rp)<input name="opening_cash" inputmode="numeric" value="0" required></label>
+    <button class="btn" type="submit">Mulai</button>
+  </form>
+</section>
+<h3>Bazar toko ini</h3>
+<ul class="list">
+  <% rows.forEach(b => { %>
+  <li>
+    <div class="row">
+      <span>
+        <div><%= b.name %> <span class="pill"><%= b.status === 'open' ? 'berjalan' : 'selesai' %></span></div>
+        <div class="muted small"><%= new Date(b.opened_at).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) %> - kembalian <%= rp(b.opening_cash) %></div>
+      </span>
+    </div>
+    <div class="actions" style="margin-top:10px">
+      <% if (b.status === 'open') { %>
+      <form method="post" action="/bazar/<%= b.id %>/pilih"><button class="btn" type="submit" style="width:100%"><%= current === b.id ? 'Buka kasir' : 'Lanjutkan' %></button></form>
+      <% } else { %>
+      <span></span>
+      <% } %>
+      <a class="btn ghost" href="/bazar/<%= b.id %>/rekap">Rekap</a>
+    </div>
+  </li>
+  <% }) %>
+</ul>
+<script src="/js/dashboard-info.js"></script>
+<%- include('partials/foot') %>
+</body>
+</html>

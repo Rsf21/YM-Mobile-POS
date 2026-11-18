@@ -1,0 +1,47 @@
+</main>
+
+<footer class="app-footer">
+  <div class="footer-inner">
+
+    <div class="footer-tech">
+      <span class="footer-label">TECHNOLOGY USED</span>
+
+      <div class="tech-marquee">
+        <div class="tech-track">
+
+          <% const technologies = [
+            { image: 'JS.png', name: 'JavaScript' },
+            { image: 'TS.webp', name: 'TypeScript' },
+            { image: 'ejs.svg', name: 'Embedded JavaScript' },
+            { image: 'express.svg', name: 'Express' },
+            { image: 'node.gif', name: 'Node.js' },
+            { image: 'SUPABASE.webp', name: 'Supabase' },
+            { image: 'POSTGRE.webp', name: 'PostgreSQL' }
+          ]; %>
+
+          <% for (let repeat = 0; repeat < 2; repeat++) { %>
+            <% technologies.forEach(tech => { %>
+              <div class="tech-card">
+                <img src="/images/tech/<%= tech.image %>" alt="<%= tech.name %>">
+                <span><%= tech.name %></span>
+              </div>
+            <% }) %>
+          <% } %>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>
+        &copy; <%= new Date().getFullYear() %> Yomart Mobile POS.
+        Seluruh Hak Cipta Dilindungi
+      </span>
+    </div>
+
+  </div>
+</footer>
+
+<script src="/js/layout.js" defer></script>
+</body>
+</html>

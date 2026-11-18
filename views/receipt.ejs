@@ -1,0 +1,69 @@
+
+<%- include('partials/head') %>
+<%
+  const rp = (n) => 'Rp ' + Number(n).toLocaleString('id-ID');
+  const EGG_SKU = '0000000163096';
+  const qtyFormat = (n) => Number(n).toLocaleString('id-ID', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 3
+  });
+%>
+
+<section class="struk">
+  <div class="center">
+    <strong>Yomart <%= sale.stores.name %></strong>
+    <div class="muted small"><%= sale.invoice_no %></div>
+    <div class="muted small">
+      <%= new Date(sale.created_at).toLocaleString('id-ID', {
+        timeZone: 'Asia/Jakarta'
+      }) %>
+    </div>
+    <div class="muted small">Kasir: <%= sale.staff.name %></div>
+  </div>
+
+  <hr>
+
+  <% sale.transaction_items.forEach(i => {
+    const isEgg = i.sku === EGG_SKU;
+    const unit = isEgg ? 'KG' : 'PCS';
+  %>
+    <div class="line">
+      <div><%= i.name %></div>
+
+      <div class="row small">
+        <span>
+          <%= qtyFormat(i.qty) %> <%= unit %>
+          x <%= rp(i.price) %> / <%= unit %>
+        </span>
+        <span><%= rp(i.subtotal) %></span>
+      </div>
+    </div>
+  <% }) %>
+
+  <hr>
+
+  <div class="row">
+    <span>Total</span>
+    <strong><%= rp(sale.total) %></strong>
+  </div>
+
+  <div class="row">
+    <span>Bayar (<%= sale.method.toUpperCase() %>)</span>
+    <span><%= rp(sale.paid) %></span>
+  </div>
+
+  <div class="row">
+    <span>Kembali</span>
+    <span><%= rp(sale.change_amount) %></span>
+  </div>
+
+  <div class="actions no-print">
+    <a class="btn ghost" href="/">Transaksi baru</a>
+    <button class="btn" id="print" type="button">Cetak</button>
+  </div>
+</section>
+
+<script src="/js/receipt.js"></script>
+<%- include('partials/foot') %>
+</body>
+</html>

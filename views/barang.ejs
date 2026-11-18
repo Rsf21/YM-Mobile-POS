@@ -1,0 +1,136 @@
+
+<%- include('partials/head') %>
+<%
+  const rp = (n) => 'Rp ' + Number(n).toLocaleString('id-ID');
+  const qtyFmt = (n) => Number(n).toLocaleString('id-ID', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 3
+  });
+  const eggSku = '0000000163096';
+%>
+
+<h2>Barang bazar</h2>
+
+<% if (note) { %>
+  <div class="<%= bad ? 'alert' : 'ok' %>"><%= note %></div>
+<% } %>
+
+<section class="card stack">
+  <div class="scanbar">
+    <input
+      id="plu"
+      type="text"
+      inputmode="numeric"
+      placeholder="Scan atau ketik PLU"
+      autocomplete="off"
+    >
+
+    <button id="btn-scan" class="btn ghost" type="button">
+      Kamera
+    </button>
+  </div>
+
+  <div id="reader" class="reader" hidden></div>
+  <div id="msg" class="alert" hidden></div>
+
+  <form method="post" action="/barang" id="add-form" class="stack" hidden>
+    <input type="hidden" name="sku" id="f-sku">
+
+    <strong id="f-name"></strong>
+
+    <label>
+      <span id="price-label">Harga jual di bazar (Rp)</span>
+      <input
+        name="price"
+        id="f-price"
+        type="number"
+        min="1"
+        step="1"
+        inputmode="numeric"
+        required
+      >
+    </label>
+
+    <label>
+      <span id="qty-label">Tambah jumlah yang dibawa (PCS)</span>
+      <input
+        name="qty"
+        id="f-qty"
+        type="number"
+        min="1"
+        step="1"
+        inputmode="numeric"
+        value="1"
+        required
+      >
+    </label>
+
+    <button class="btn" type="submit">
+      Simpan ke daftar bazar
+    </button>
+  </form>
+</section>
+
+<h3>Daftar barang (<%= items.length %>)</h3>
+
+<ul class="list">
+  <% items.forEach(i => {
+    const isEgg = i.sku === eggSku;
+    const unit = isEgg ? 'KG' : 'PCS';
+    const sold = Number(i.sold) || 0;
+    const brought = Number(i.brought) || 0;
+    const remaining = brought - sold;
+    const minQty = isEgg
+      ? Math.max(0.001, sold)
+      : Math.max(1, Math.ceil(sold));
+  %>
+    <li>
+      <div><%= i.name %></div>
+
+      <div class="muted small">
+        Harga <%= rp(i.price) %> / <%= unit %>
+      </div>
+
+      <div class="muted small">
+        Dibawa <%= qtyFmt(brought) %> <%= unit %> -
+        Terjual <%= qtyFmt(sold) %> <%= unit %> -
+        Sisa <%= qtyFmt(remaining) %> <%= unit %>
+      </div>
+
+      <form method="post" action="/barang/ubah" class="edit">
+        <input type="hidden" name="sku" value="<%= i.sku %>">
+
+        <input
+          name="price"
+          type="number"
+          min="1"
+          step="1"
+          value="<%= i.price %>"
+          inputmode="numeric"
+          aria-label="Harga"
+          required
+        >
+
+        <input
+          name="qty"
+          type="number"
+          min="<%= minQty %>"
+          step="<%= isEgg ? '0.001' : '1' %>"
+          value="<%= brought %>"
+          inputmode="<%= isEgg ? 'decimal' : 'numeric' %>"
+          aria-label="Jumlah dibawa"
+          required
+        >
+
+        <button class="btn ghost" type="submit">Simpan</button>
+      </form>
+    </li>
+  <% }) %>
+</ul>
+
+<script src="/vendor/html5-qrcode/html5-qrcode.min.js"></script>
+<script src="/js/barang.js"></script>
+
+<%- include('partials/foot') %>
+</body>
+</html>

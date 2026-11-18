@@ -1,0 +1,20 @@
+<%- include('partials/head') %>
+<% const rp = (n) => 'Rp ' + Number(n).toLocaleString('id-ID'); %>
+<h2>Penjualan bazar</h2>
+<div class="card row"><span><%= rows.length %> transaksi</span><strong><%= rp(total) %></strong></div>
+<ul class="list">
+  <% rows.forEach(r => { %>
+  <li>
+    <a href="/struk/<%= r.id %>" class="row">
+      <span>
+        <div><%= r.invoice_no %></div>
+        <div class="muted small"><%= new Date(r.created_at).toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit' }) %> - <%= r.method.toUpperCase() %></div>
+      </span>
+      <strong><%= rp(r.total) %></strong>
+    </a>
+  </li>
+  <% }) %>
+</ul>
+<%- include('partials/foot') %>
+</body>
+</html>

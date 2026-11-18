@@ -1,0 +1,208 @@
+<%- include('partials/head') %>
+<section class="dashboard-info">
+  <div class="dashboard-panel dashboard-clock">
+    <strong id="dashboard-date" class="dashboard-date">Memuat tanggal...</strong>
+    <strong id="dashboard-time" class="dashboard-time">00:00:00</strong>
+  </div>
+</section>
+
+<section>
+  <h2>Kasir Bazar</h2>
+  <p class="muted small">Masukkan jumlah sisa barang setelah bazar selesai.</p>
+</section>
+
+
+<section class="scanbar">
+  <input
+    id="plu"
+    inputmode="search"
+    placeholder="Scan atau ketik PLU / nama barang"
+    autocomplete="off"
+  >
+  <button id="btn-scan" class="btn ghost" type="button">Kamera</button>
+</section>
+
+<div id="reader" class="reader" hidden></div>
+<div id="msg" class="alert" hidden></div>
+<ul id="results" class="results" hidden></ul>
+
+<section class="card">
+  <div class="row">
+    <h3>Keranjang Bazar</h3>
+    <span id="catalog-count" class="muted small">Memuat...</span>
+  </div>
+
+  <ul id="cart" class="cart"></ul>
+
+  <div id="empty" class="muted center">
+    Belum ada barang yang ditambahkan ke bazar.
+  </div>
+</section>
+
+</main>
+
+<div class="checkout-bar">
+  <div>
+    <div class="muted small">
+      <span id="count">0</span> jenis barang terjual
+    </div>
+    <strong id="total">Rp 0</strong>
+  </div>
+
+  <button id="btn-pay" class="btn" type="button" disabled>
+    Bayar
+  </button>
+</div>
+
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-body">
+    <h2>Pembayaran Tunai</h2>
+
+    <div class="row">
+      <span class="muted">Total pembayaran</span>
+      <strong id="s-total">Rp 0</strong>
+    </div>
+
+    <div id="cash-box">
+      <label for="paid">Uang diterima</label>
+      <input
+        id="paid"
+        type="number"
+        min="0"
+        inputmode="numeric"
+        placeholder="Masukkan nominal"
+      >
+
+      <div id="quick" class="quick"></div>
+
+      <div class="row">
+        <span class="muted">Kembalian</span>
+        <strong id="change">Rp 0</strong>
+      </div>
+    </div>
+
+    <div id="pay-err" class="alert" hidden></div>
+
+    <div class="actions">
+      <button id="s-cancel" class="btn ghost" type="button">Batal</button>
+      <button id="s-ok" class="btn" type="button">Konfirmasi</button>
+    </div>
+  </div>
+</div>
+
+<div id="recap-sheet" class="sheet" hidden>
+  <div class="sheet-body">
+    <h2 id="recap-title">Pembayaran Berhasil</h2>
+    <p id="recap-bazaar-name" class="muted small">Rekap bazar</p>
+
+    <div class="card stack">
+      <span class="muted small">Uang Kembalian Awal</span>
+      <strong id="recap-opening" style="font-size:20px">Rp 0</strong>
+
+      <div class="divider"></div>
+
+      <span class="muted small">Total Hasil Bazar Keseluruhan</span>
+      <strong id="recap-total" style="font-size:28px">Rp 0</strong>
+    </div>
+
+    <section class="stack" style="margin-top:16px">
+      <h3>Rincian Barang Bazar</h3>
+
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Barang</th>
+              <th>Terjual</th>
+              <th>Sisa</th>
+            </tr>
+          </thead>
+          <tbody id="recap-items">
+            <tr>
+              <td colspan="3" class="center">Memuat rincian barang...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="close-bazaar-section" class="card stack" style="margin-top:16px">
+      <h3>Penutupan Bazar</h3>
+
+      <p class="muted small">
+        Masukkan jumlah uang tunai yang benar-benar ada setelah bazar selesai.
+        Uang kembalian awal tidak dimasukkan ke perhitungan hasil penjualan.
+      </p>
+
+      <label for="closing-cash">Uang tunai aktual (Rp)</label>
+      <input
+        id="closing-cash"
+        type="number"
+        min="0"
+        max="1000000000"
+        step="1"
+        inputmode="numeric"
+        placeholder="Masukkan jumlah uang tunai"
+      >
+
+      <div class="row">
+        <span class="muted">Total penjualan</span>
+        <strong id="closing-total">Rp 0</strong>
+      </div>
+
+      <div class="row">
+        <span class="muted">Selisih uang</span>
+        <strong id="closing-diff">Belum dihitung</strong>
+      </div>
+
+      <div id="close-error" class="alert" hidden></div>
+
+      <button id="btn-close-bazaar" class="btn" type="button">
+        Tutup Bazar
+      </button>
+    </section>
+
+    <div id="closed-result" class="card stack" hidden>
+      <h3>Bazar Berhasil Ditutup</h3>
+
+      <div class="row">
+        <span class="muted">Uang tunai aktual</span>
+        <strong id="closed-cash">Rp 0</strong>
+      </div>
+
+      <div class="row">
+        <span class="muted">Total penjualan</span>
+        <strong id="closed-total">Rp 0</strong>
+      </div>
+
+      <div class="row">
+        <span class="muted">Hasil selisih</span>
+        <strong id="closed-diff">Pas</strong>
+      </div>
+
+      <a id="invoice-link" class="btn" href="#" hidden>
+        Unduh Invoice PDF
+      </a>
+    </div>
+
+    <div id="recap-error" class="alert" hidden></div>
+
+    <div class="actions">
+      <button id="recap-back" class="btn ghost" type="button">
+        Kembali ke Kasir
+      </button>
+
+      <button id="recap-receipt" class="btn" type="button">
+        Lihat Struk
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="/vendor/html5-qrcode/html5-qrcode.min.js"></script>
+<script src="/js/pos.js"></script>
+<script src="/js/dashboard-info.js"></script>
+
+<%- include('partials/foot') %>
+</body>
+</html>
