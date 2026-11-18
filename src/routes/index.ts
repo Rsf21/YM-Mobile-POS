@@ -105,6 +105,12 @@ r.get("/about", requireAuth, (req, res) => {
   res.render("about", { active: "about" });
 });
 
+r.get("/meet-developer", requireAuth, (req, res) => {
+  res.render("meet-developer", {
+    active: "meet-developer",
+  });
+});
+
 r.get("/faq", requireAuth, (req, res) => {
   res.render("faq", {
     active: "faq",
