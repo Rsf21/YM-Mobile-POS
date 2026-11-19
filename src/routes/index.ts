@@ -101,7 +101,6 @@ r.get(
   ...inBazaar,
   posPage,
 );
-r.get("/", ...inBazaar, posPage);
 
 r.get("/api/bazaar/recap", ...inBazaar, wrap(apiBazaarRecap));
 r.post("/api/bazaar/close", ...inBazaar, wrap(apiBazaarClose));
