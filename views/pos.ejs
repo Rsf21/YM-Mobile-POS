@@ -100,7 +100,7 @@
         Uang kembalian awal tidak dimasukkan ke perhitungan hasil penjualan.
       </p>
 
-      <label for="closing-cash">Uang tunai aktual (Rp)</label>
+      <label for="closing-cash">Uang Fisik (Rp)</label>
 
       <input
         id="closing-cash"
@@ -133,7 +133,7 @@
       <h3>Bazar Berhasil Ditutup</h3>
 
       <div class="row">
-        <span class="muted">Uang tunai aktual</span>
+        <span class="muted">Uang Fisik</span>
         <strong id="closed-cash">Rp 0</strong>
       </div>
 
@@ -147,9 +147,30 @@
         <strong id="closed-diff">Pas</strong>
       </div>
 
-      <a id="invoice-link" class="btn" href="#" hidden>
-        Unduh Invoice PDF
-      </a>
+      <div
+        class="closed-result-actions"
+        style="display:flex;align-items:stretch;gap:12px;width:100%;margin-top:8px"
+      >
+        <a
+          id="invoice-link"
+          class="btn"
+          href="#"
+          hidden
+          style="flex:1;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center"
+        >
+          Unduh Invoice PDF
+        </a>
+
+        <button
+          id="closed-back"
+          class="btn ghost"
+          type="button"
+          onclick="window.location.reload()"
+          style="flex:1;min-width:0"
+        >
+          Kembali
+        </button>
+      </div>
 
       <div id="invoice-success" class="alert" hidden>
         Invoice berhasil diunduh.

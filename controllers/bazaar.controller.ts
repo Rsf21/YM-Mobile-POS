@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+﻿import { Request, Response } from "express";
 import PDFDocument from "pdfkit";
 import {
   createBazaar,
@@ -260,9 +260,7 @@ export async function recapPage(req: Request, res: Response) {
   const cash = sum.find((r) => r.method === "cash")?.total ?? 0;
   const totalSales = sum.reduce((total, row) => total + row.total, 0);
   const trx = sum.reduce((total, row) => total + row.trx, 0);
-
-  const diff = b.closing_cash === null ? null : b.closing_cash - totalSales;
-
+  const diff = b.closing_cash === null ? null : Number(b.closing_cash) - cash;
   const brought = items.reduce((total, item) => total + item.brought, 0);
   const sold = items.reduce((total, item) => total + item.sold, 0);
 
@@ -273,7 +271,7 @@ export async function recapPage(req: Request, res: Response) {
     qris: 0,
     debit: 0,
     trx,
-    expected: totalSales,
+    expected: cash,
     totalSales,
     diff,
     brought,
@@ -389,9 +387,15 @@ export async function bazaarInvoicePdf(req: Request, res: Response) {
   doc.text("Kasir", left, infoY + 42);
 
   doc.font("Helvetica-Bold").fillColor("#202833");
-  doc.text(String(data.bazaar.name), 125, infoY, { width: 165 });
-  doc.text(String(data.store.name), 125, infoY + 21, { width: 165 });
-  doc.text(String(data.cashier.name), 125, infoY + 42, { width: 165 });
+  doc.text(String(data.bazaar.name), 125, infoY, {
+    width: 165,
+  });
+  doc.text(String(data.store.name), 125, infoY + 21, {
+    width: 165,
+  });
+  doc.text(String(data.cashier.name), 125, infoY + 42, {
+    width: 165,
+  });
 
   doc.text(dateFormat(data.bazaar.openedAt), 390, infoY, {
     width: 160,
@@ -519,9 +523,10 @@ export async function bazaarInvoicePdf(req: Request, res: Response) {
   y += 22;
 
   const summaryRows = [
-    ["Total penjualan (tidak termasuk modal)", rupiah(data.totalSales)],
     ["Uang modal", rupiah(data.openingCash)],
-    ["Uang penutupan", rupiah(data.closingCash)],
+    ["Total penjualan", rupiah(data.totalSales)],
+    ["Uang tunai seharusnya (tanpa modal)", rupiah(data.cashSales)],
+    ["Uang tunai dihitung", rupiah(data.closingCash)],
   ];
 
   doc.font("Helvetica").fontSize(9).fillColor("#687386");
@@ -567,7 +572,7 @@ export async function bazaarInvoicePdf(req: Request, res: Response) {
     .font("Helvetica-Bold")
     .fontSize(9)
     .fillColor("#202833")
-    .text(`${data.differenceStatus.toUpperCase()}`, left, y);
+    .text(data.differenceStatus.toUpperCase(), left, y);
 
   const pages = doc.bufferedPageRange();
 
@@ -578,7 +583,7 @@ export async function bazaarInvoicePdf(req: Request, res: Response) {
       .font("Helvetica")
       .fontSize(8)
       .fillColor("#98a2b3")
-      .text("Yomart Mobile POS | Dokumen invoice bazaar", left, 780, {
+      .text("Yomart Mobile POS | Dokumen invoice bazaar", left, 770, {
         width,
         align: "center",
       });
@@ -587,7 +592,7 @@ export async function bazaarInvoicePdf(req: Request, res: Response) {
       .font("Helvetica")
       .fontSize(8)
       .fillColor("#98a2b3")
-      .text(`Halaman ${page + 1} dari ${pages.count}`, left, 794, {
+      .text(`Halaman ${page + 1} dari ${pages.count}`, left, 782, {
         width,
         align: "center",
       });

@@ -464,9 +464,27 @@ p:last-child {
 }
 
 .nav-icon {
-  width: 23px;
-  text-align: center;
-  font-size: 19px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.7;
+  transition:
+    opacity 0.2s var(--ease),
+    transform 0.15s var(--ease);
+}
+
+.side-nav a:hover .nav-icon {
+  opacity: 1;
+}
+
+.side-nav a.current .nav-icon {
+  opacity: 1;
+  stroke-width: 2.1;
 }
 
 .side-menu-theme {
@@ -2790,5 +2808,183 @@ body:has(.login)::before {
 
   100% {
     transform: translate3d(-1%, 2%, 0) scale(1.02);
+  }
+}
+
+/* =========================================================
+   TOMBOL UNDUH INVOICE
+   Merah, berdenyut, dengan cahaya neon yang mengelilingi tepi.
+   Berlaku untuk semua selector di bawah. Untuk tombol baru,
+   cukup tambahkan class "btn-invoice".
+   ========================================================= */
+
+@property --invoice-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.recap-invoice-card,
+.recap-invoice-btn,
+.btn-invoice,
+.invoice-btn,
+.btn-download-invoice {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  border: 0;
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, #ef1c34 0%, #c20f26 55%, #a20c20 100%);
+  color: #ffffff !important;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow:
+    0 0 14px rgba(255, 45, 85, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  text-shadow: 0 1px 2px rgba(80, 0, 10, 0.4);
+  animation: invoice-pulse 1.6s ease-in-out infinite;
+  transition:
+    transform 0.2s var(--ease),
+    filter 0.2s var(--ease);
+}
+
+.recap-invoice-card span,
+.recap-invoice-card strong,
+.recap-invoice-btn span,
+.btn-invoice span,
+.invoice-btn span,
+.btn-download-invoice span {
+  color: #ffffff !important;
+}
+
+/* Cincin neon tajam yang berputar di tepi */
+.recap-invoice-card::before,
+.recap-invoice-btn::before,
+.btn-invoice::before,
+.invoice-btn::before,
+.btn-download-invoice::before,
+/* Pendaran (glow) neon di belakang cincin */
+.recap-invoice-card::after,
+.recap-invoice-btn::after,
+.btn-invoice::after,
+.invoice-btn::after,
+.btn-download-invoice::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  padding: 2px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--invoice-angle),
+    transparent 0deg,
+    transparent 200deg,
+    rgba(255, 45, 85, 0.55) 250deg,
+    #ff5a78 290deg,
+    #ffffff 318deg,
+    #ff5a78 340deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  animation: invoice-neon-spin 2.2s linear infinite;
+}
+
+.recap-invoice-card::before,
+.recap-invoice-btn::before,
+.btn-invoice::before,
+.invoice-btn::before,
+.btn-download-invoice::before {
+  z-index: 2;
+}
+
+.recap-invoice-card::after,
+.recap-invoice-btn::after,
+.btn-invoice::after,
+.invoice-btn::after,
+.btn-download-invoice::after {
+  inset: -4px;
+  padding: 4px;
+  z-index: -1;
+  filter: blur(7px);
+  opacity: 0.95;
+}
+
+.recap-invoice-card:hover,
+.recap-invoice-btn:hover,
+.btn-invoice:hover,
+.invoice-btn:hover,
+.btn-download-invoice:hover {
+  background: linear-gradient(135deg, #ff2a42 0%, #d3112a 55%, #b00d22 100%);
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.recap-invoice-card:active,
+.recap-invoice-btn:active,
+.btn-invoice:active,
+.invoice-btn:active,
+.btn-download-invoice:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.recap-invoice-card:disabled,
+.recap-invoice-btn:disabled,
+.btn-invoice:disabled,
+.invoice-btn:disabled,
+.btn-download-invoice:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  animation-play-state: paused;
+}
+
+@keyframes invoice-pulse {
+  0%,
+  100% {
+    scale: 1;
+    box-shadow:
+      0 0 0 0 rgba(255, 45, 85, 0.55),
+      0 0 14px rgba(255, 45, 85, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  50% {
+    scale: 1.035;
+    box-shadow:
+      0 0 0 11px rgba(255, 45, 85, 0),
+      0 0 24px rgba(255, 45, 85, 0.75),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+}
+
+@keyframes invoice-neon-spin {
+  to {
+    --invoice-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recap-invoice-card,
+  .recap-invoice-btn,
+  .btn-invoice,
+  .invoice-btn,
+  .btn-download-invoice,
+  .recap-invoice-card::before,
+  .recap-invoice-btn::before,
+  .btn-invoice::before,
+  .invoice-btn::before,
+  .btn-download-invoice::before,
+  .recap-invoice-card::after,
+  .recap-invoice-btn::after,
+  .btn-invoice::after,
+  .invoice-btn::after,
+  .btn-download-invoice::after {
+    animation: none !important;
   }
 }

@@ -332,9 +332,11 @@ export async function getBazaarInvoiceData(storeId: string, bazaarId: string) {
 
   const totalSales = payments.reduce((total, row) => total + row.total, 0);
 
+  const cashSales = payments.find((row) => row.method === "cash")?.total ?? 0;
+
   const closingCash = Number(bazaar.closing_cash);
   const openingCash = Number(bazaar.opening_cash || 0);
-  const difference = closingCash - totalSales;
+  const difference = closingCash - cashSales;
 
   return {
     bazaar: {
@@ -353,6 +355,7 @@ export async function getBazaarInvoiceData(storeId: string, bazaarId: string) {
     openingCash,
     closingCash,
     totalSales,
+    cashSales,
     difference,
     differenceStatus:
       difference === 0 ? "pas" : difference > 0 ? "lebih" : "kurang",

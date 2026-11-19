@@ -429,7 +429,6 @@
 
     var link = $("invoice-link");
     var success = $("invoice-success");
-    var backButton = $("back-to-cashier");
 
     isDownloadingInvoice = true;
 
@@ -438,7 +437,7 @@
     link.style.opacity = "0.65";
 
     success.hidden = true;
-    backButton.hidden = true;
+    success.style.color = "";
 
     fetch(url, {
       method: "GET",
@@ -483,8 +482,6 @@
 
         success.textContent = "Invoice berhasil diunduh.";
         success.hidden = false;
-
-        backButton.hidden = false;
 
         link.textContent = "Unduh Ulang Invoice PDF";
       })
@@ -601,10 +598,13 @@
         invoiceLink.href = data.invoiceUrl;
         invoiceLink.hidden = false;
         invoiceLink.textContent = "Unduh Invoice PDF";
+        invoiceLink.style.pointerEvents = "";
+        invoiceLink.style.opacity = "";
 
         $("invoice-success").hidden = true;
         $("invoice-success").style.color = "";
 
+        $("closed-back").hidden = false;
         $("back-to-cashier").hidden = true;
 
         $("recap-receipt").hidden = !currentReceiptId;
@@ -635,6 +635,10 @@
     }
 
     downloadInvoice(url);
+  });
+
+  $("closed-back").addEventListener("click", function () {
+    location.reload();
   });
 
   $("back-to-cashier").addEventListener("click", function () {

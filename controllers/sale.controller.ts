@@ -69,7 +69,7 @@ export async function receiptPage(req: Request, res: Response) {
 }
 
 export async function historyPage(req: Request, res: Response) {
-  const rows = await listAllTransactions();
+  const rows = await listAllTransactions(req.session!.storeId);
 
   const total = rows.reduce(
     (sum, transaction) => sum + Number(transaction.total || 0),

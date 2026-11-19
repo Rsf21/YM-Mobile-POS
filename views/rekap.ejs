@@ -19,46 +19,46 @@ const totalSales = Number(cash || 0) + Number(qris || 0) + Number(debit || 0);
     </h2>
   </section>
 
-  <section class="recap-stats">
-    <div class="recap-stat-column">
-      <div class="recap-invoice-slot"></div>
-
-      <div class="stat">
-        <span>Uang Modal Kembalian</span>
-        <strong><%= rp(b.opening_cash) %></strong>
-      </div>
-
-      <div class="stat">
-        <span>Total penjualan</span>
-        <strong><%= rp(totalSales) %></strong>
-      </div>
+ 
+<section class="recap-stats">
+  <div class="recap-stat-column">
+    <div class="stat">
+      <span>Uang Modal Kembalian</span>
+      <strong><%= rp(b.opening_cash) %></strong>
     </div>
 
-    <div class="recap-stat-column">
-      <div class="recap-invoice-slot">
-        <% if (!isOpen) { %>
-          <a
-            href="/bazar/<%= b.id %>/invoice.pdf"
-            target="_blank"
-            rel="noopener"
-            class="btn recap-invoice-btn"
-          >
-            Unduh Invoice PDF
-          </a>
-        <% } %>
-      </div>
-
-      <div class="stat">
-        <span>Penjualan tunai</span>
-        <strong><%= rp(cash) %></strong>
-      </div>
-
-      <div class="stat">
-        <span>Uang tunai seharusnya</span>
-        <strong><%= rp(expected) %></strong>
-      </div>
+    <div class="stat">
+      <span>Total penjualan</span>
+      <strong><%= rp(totalSales) %></strong>
     </div>
-  </section>
+  </div>
+
+  <div class="recap-stat-column">
+    <% if (!isOpen) { %>
+      <a
+        href="/bazar/<%= b.id %>/invoice.pdf"
+        target="_blank"
+        rel="noopener"
+        class="stat recap-invoice-card pulse"
+        style="text-decoration:none;color:inherit;display:flex;flex-direction:column;justify-content:center"
+      >
+        <span>INVOICE BAZAAR</span>
+        <strong>Download PDF</strong>
+      </a>
+    <% } else { %>
+      <div class="stat">
+        <span>Invoice PDF</span>
+        <strong class="muted">Tersedia setelah bazar ditutup</strong>
+      </div>
+    <% } %>
+
+    <div class="stat">
+      <span>Uang tunai seharusnya</span>
+      <strong><%= rp(expected) %></strong>
+    </div>
+  </div>
+</section>
+
 
   <% if (isOpen) { %>
     <section class="card stack" style="margin-top:12px">
@@ -70,7 +70,7 @@ const totalSales = Number(cash || 0) + Number(qris || 0) + Number(debit || 0);
 
       <form method="post" action="/bazar/<%= b.id %>/tutup" class="stack">
         <label>
-          Uang tunai di tangan (Rp)
+          Uang Fisik (Rp)
           <input
             name="closing_cash"
             type="number"
@@ -87,11 +87,11 @@ const totalSales = Number(cash || 0) + Number(qris || 0) + Number(debit || 0);
     </section>
   <% } else { %>
     <section class="card row" style="margin-top:12px">
-      <span>Uang tunai dihitung <%= rp(b.closing_cash) %></span>
+      <span>Fisik Uang <%= rp(b.closing_cash) %></span>
 
-      <strong class="<%= diff === 0 ? 'good' : 'bad' %>">
-        <%= diff === 0 ? 'Pas' : (diff > 0 ? 'Lebih ' : 'Kurang ') + rp(Math.abs(diff)) %>
-      </strong>
+     <strong class="<%= diff > 0 ? 'good' : diff < 0 ? 'bad' : '' %>">
+  <%= diff === 0 ? 'Pas' : (diff > 0 ? '+ ' : '− ') + rp(Math.abs(diff)) %>
+</strong>
     </section>
   <% } %>
 

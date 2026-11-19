@@ -47,16 +47,6 @@
     <strong><%= rp(sale.total) %></strong>
   </div>
 
-  <div class="row">
-    <span>Bayar (<%= sale.method.toUpperCase() %>)</span>
-    <span><%= rp(sale.paid) %></span>
-  </div>
-
-  <div class="row">
-    <span>Kembali</span>
-    <span><%= rp(sale.change_amount) %></span>
-  </div>
-
   <div class="actions no-print">
     <a class="btn ghost" href="/">Transaksi baru</a>
     <button class="btn" id="print" type="button">Cetak</button>
