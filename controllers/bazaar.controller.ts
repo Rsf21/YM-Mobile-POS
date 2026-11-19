@@ -23,12 +23,14 @@ const rupiah = (value: number) =>
 const dateFormat = (value: string | null) => {
   if (!value) return "-";
 
-  return new Date(value).toLocaleString("id-ID", {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "-";
+
+  return date.toLocaleDateString("id-ID", {
     day: "2-digit",
     month: "long",
     year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
   });
 };
 
@@ -385,17 +387,24 @@ export async function bazaarInvoicePdf(req: Request, res: Response) {
   doc.text("Nama bazar", left, infoY);
   doc.text("Cabang", left, infoY + 21);
   doc.text("Kasir", left, infoY + 42);
-  doc.text("Waktu buka", 310, infoY);
-  doc.text("Waktu tutup", 310, infoY + 21);
-  doc.text("Status", 310, infoY + 42);
 
   doc.font("Helvetica-Bold").fillColor("#202833");
   doc.text(String(data.bazaar.name), 125, infoY, { width: 165 });
   doc.text(String(data.store.name), 125, infoY + 21, { width: 165 });
   doc.text(String(data.cashier.name), 125, infoY + 42, { width: 165 });
-  doc.text(dateFormat(data.bazaar.openedAt), 390, infoY, { width: 160 });
-  doc.text(dateFormat(data.bazaar.closedAt), 390, infoY + 21, { width: 160 });
-  doc.text("DITUTUP", 390, infoY + 42, { width: 160 });
+
+  doc.text(dateFormat(data.bazaar.openedAt), 390, infoY, {
+    width: 160,
+    align: "right",
+  });
+
+  doc.font("Helvetica").fontSize(9).fillColor("#687386");
+
+  doc.font("Helvetica-Bold").fontSize(9).fillColor("#202833");
+  doc.text("DITUTUP", 435, infoY + 42, {
+    width: 115,
+    align: "right",
+  });
 
   line(205);
 
@@ -510,8 +519,8 @@ export async function bazaarInvoicePdf(req: Request, res: Response) {
   y += 22;
 
   const summaryRows = [
-    ["Total penjualan", rupiah(data.totalSales)],
-    ["Uang pembukaan", rupiah(data.openingCash)],
+    ["Total penjualan (tidak termasuk modal)", rupiah(data.totalSales)],
+    ["Uang modal", rupiah(data.openingCash)],
     ["Uang penutupan", rupiah(data.closingCash)],
   ];
 

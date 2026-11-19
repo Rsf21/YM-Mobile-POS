@@ -57,11 +57,19 @@ export async function getSale(storeId: string, id: string) {
   return data as any;
 }
 
-export async function listByBazaar(bazaarId: string) {
+export async function listAllTransactions() {
   const { data, error } = await db
     .from("transactions")
-    .select("id, invoice_no, total, method, created_at")
-    .eq("bazaar_id", bazaarId)
+    .select(
+      `
+      id,
+      invoice_no,
+      total,
+      method,
+      created_at,
+      bazaars(name)
+    `,
+    )
     .order("created_at", { ascending: false })
     .limit(500);
 

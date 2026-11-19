@@ -28,6 +28,7 @@
   var currentTotalSales = 0;
   var currentFinalItems = [];
   var isSubmitting = false;
+  var isDownloadingInvoice = false;
 
   function isEgg(p) {
     return (
@@ -358,7 +359,9 @@
     $("closing-total").textContent = rp(currentTotalSales);
 
     $("closing-cash").value = "";
+
     $("closing-diff").textContent = "Belum dihitung";
+    $("closing-diff").style.color = "";
 
     var tbody = $("recap-items");
     tbody.innerHTML = "";
@@ -392,7 +395,7 @@
     var el = $("closing-diff");
     var value = $("closing-cash").value;
 
-    el.classList.remove("text-danger", "text-success");
+    el.style.color = "";
 
     if (value === "") {
       el.textContent = "Belum dihitung";
@@ -403,21 +406,102 @@
 
     if (!Number.isSafeInteger(closing) || closing < 0 || closing > 1000000000) {
       el.textContent = "Nominal tidak valid";
-      el.classList.add("text-danger");
+      el.style.color = "#dc2626";
       return;
     }
 
     var diff = closing - currentTotalSales;
 
-    if (diff === 0) {
-      el.textContent = "Pas";
+    if (diff < 0) {
+      el.textContent = "- " + rp(Math.abs(diff));
+      el.style.color = "#dc2626";
     } else if (diff > 0) {
       el.textContent = "+ " + rp(diff);
-      el.classList.add("text-success");
+      el.style.color = "#16a34a";
     } else {
-      el.textContent = "- " + rp(Math.abs(diff));
-      el.classList.add("text-danger");
+      el.textContent = rp(0);
+      el.style.color = "";
     }
+  }
+
+  function downloadInvoice(url) {
+    if (isDownloadingInvoice) return;
+
+    var link = $("invoice-link");
+    var success = $("invoice-success");
+    var backButton = $("back-to-cashier");
+
+    isDownloadingInvoice = true;
+
+    link.textContent = "Mengunduh invoice...";
+    link.style.pointerEvents = "none";
+    link.style.opacity = "0.65";
+
+    success.hidden = true;
+    backButton.hidden = true;
+
+    fetch(url, {
+      method: "GET",
+      credentials: "same-origin",
+    })
+      .then(function (response) {
+        if (response.status === 401) {
+          location.href = "/login";
+          throw new Error("auth");
+        }
+
+        if (!response.ok) {
+          throw new Error("Gagal mengunduh invoice. Silakan coba kembali.");
+        }
+
+        var contentType = response.headers.get("content-type") || "";
+
+        if (!contentType.toLowerCase().includes("application/pdf")) {
+          throw new Error("Server tidak mengirim file PDF yang valid.");
+        }
+
+        return response.blob();
+      })
+      .then(function (blob) {
+        if (!blob || blob.size === 0) {
+          throw new Error("File invoice kosong atau tidak valid.");
+        }
+
+        var objectUrl = URL.createObjectURL(blob);
+        var downloadAnchor = document.createElement("a");
+
+        downloadAnchor.href = objectUrl;
+        downloadAnchor.download = "invoice-bazar.pdf";
+
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+
+        window.setTimeout(function () {
+          URL.revokeObjectURL(objectUrl);
+        }, 60000);
+
+        success.textContent = "Invoice berhasil diunduh.";
+        success.hidden = false;
+
+        backButton.hidden = false;
+
+        link.textContent = "Unduh Ulang Invoice PDF";
+      })
+      .catch(function (error) {
+        if (error.message === "auth") return;
+
+        success.textContent = error.message;
+        success.hidden = false;
+        success.style.color = "#dc2626";
+
+        link.textContent = "Coba Unduh Invoice Lagi";
+      })
+      .finally(function () {
+        isDownloadingInvoice = false;
+        link.style.pointerEvents = "";
+        link.style.opacity = "";
+      });
   }
 
   $("closing-cash").addEventListener("input", updateClosingPreview);
@@ -497,18 +581,31 @@
         $("closed-total").textContent = rp(data.recap.totalSales);
 
         var diff = Number(data.recap.diff) || 0;
-        var diffText = "Pas";
+        var closedDiff = $("closed-diff");
 
-        if (diff > 0) {
-          diffText = "Lebih " + rp(diff);
-        } else if (diff < 0) {
-          diffText = "Kurang " + rp(Math.abs(diff));
+        closedDiff.style.color = "";
+
+        if (diff < 0) {
+          closedDiff.textContent = "- " + rp(Math.abs(diff));
+          closedDiff.style.color = "#dc2626";
+        } else if (diff > 0) {
+          closedDiff.textContent = "+ " + rp(diff);
+          closedDiff.style.color = "#16a34a";
+        } else {
+          closedDiff.textContent = rp(0);
+          closedDiff.style.color = "";
         }
 
-        $("closed-diff").textContent = diffText;
+        var invoiceLink = $("invoice-link");
 
-        $("invoice-link").href = data.invoiceUrl;
-        $("invoice-link").hidden = false;
+        invoiceLink.href = data.invoiceUrl;
+        invoiceLink.hidden = false;
+        invoiceLink.textContent = "Unduh Invoice PDF";
+
+        $("invoice-success").hidden = true;
+        $("invoice-success").style.color = "";
+
+        $("back-to-cashier").hidden = true;
 
         $("recap-receipt").hidden = !currentReceiptId;
         $("recap-title").textContent = "Bazar Selesai";
@@ -526,6 +623,23 @@
         button.textContent = "Tutup Bazar";
       });
   };
+
+  $("invoice-link").addEventListener("click", function (event) {
+    event.preventDefault();
+
+    var url = $("invoice-link").getAttribute("href");
+
+    if (!url || url === "#") {
+      flash("Alamat invoice tidak tersedia.");
+      return;
+    }
+
+    downloadInvoice(url);
+  });
+
+  $("back-to-cashier").addEventListener("click", function () {
+    location.reload();
+  });
 
   function byPlu(code) {
     return get("/api/products/plu/" + encodeURIComponent(code))

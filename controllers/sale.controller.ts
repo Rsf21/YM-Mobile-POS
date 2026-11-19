@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { z } from "zod";
-import { createBazaarSale, getSale, listByBazaar } from "../models/sale.model";
+import {
+  createBazaarSale,
+  getSale,
+  listAllTransactions,
+} from "../models/sale.model";
 
 const EGG_SKU = "0000000163096";
 
@@ -65,15 +69,15 @@ export async function receiptPage(req: Request, res: Response) {
 }
 
 export async function historyPage(req: Request, res: Response) {
-  const bazaarId = req.session!.bazaarId;
+  const rows = await listAllTransactions();
 
-  if (!bazaarId) {
-    return res.redirect("/bazar");
-  }
-
-  const transactions = await listByBazaar(bazaarId);
+  const total = rows.reduce(
+    (sum, transaction) => sum + Number(transaction.total || 0),
+    0,
+  );
 
   return res.render("history", {
-    transactions,
+    rows,
+    total,
   });
 }

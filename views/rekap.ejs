@@ -1,3 +1,4 @@
+
 <%- include('partials/head') %>
 
 <%
@@ -95,9 +96,33 @@ const totalSales = Number(cash || 0) + Number(qris || 0) + Number(debit || 0);
   <% } %>
 
   <section style="margin-top:20px">
-    <h3>Rincian barang</h3>
+    <div class="recap-table-heading">
+      <h3>Rincian barang</h3>
 
-    <div class="tbl-wrap">
+      <div class="recap-scroll-controls">
+        <button
+          type="button"
+          class="recap-scroll-btn"
+          id="recapScrollLeft"
+          aria-label="Geser tabel ke kiri"
+          disabled
+        >
+          ‹
+        </button>
+
+        <button
+          type="button"
+          class="recap-scroll-btn"
+          id="recapScrollRight"
+          aria-label="Geser tabel ke kanan"
+          disabled
+        >
+          ›
+        </button>
+      </div>
+    </div>
+
+    <div class="tbl-wrap recap-table-scroll" id="recapTableScroll">
       <table class="tbl recap-table">
         <thead>
           <tr>
@@ -138,6 +163,8 @@ const totalSales = Number(cash || 0) + Number(qris || 0) + Number(debit || 0);
     </div>
   </section>
 </main>
+
+<script src="/js/rekap.js" defer></script>
 
 <%- include('partials/foot') %>
 </body>

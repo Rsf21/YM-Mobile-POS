@@ -99,7 +99,7 @@ r.get("/api/catalog/plu/:plu", ...inBazaar, wrap(apiCatalog));
 r.post("/barang", ...inBazaar, wrap(itemAdd));
 r.post("/barang/ubah", ...inBazaar, wrap(itemUpdate));
 
-r.get("/riwayat", ...inBazaar, wrap(historyPage));
+r.get("/riwayat", requireAuth, wrap(historyPage));
 
 r.get("/about", requireAuth, (req, res) => {
   res.render("about", { active: "about" });
