@@ -82,6 +82,25 @@ r.get("/bazar/:id/rekap", requireAuth, wrap(recapPage));
 r.get("/bazar/:id/invoice.pdf", requireAuth, wrap(bazaarInvoicePdf));
 r.post("/bazar/:id/tutup", requireAuth, wrap(bazaarClose));
 
+r.get(
+  "/",
+  (req, res, next) => {
+    const userAgent = req.get("user-agent") || "";
+
+    const socialCrawler =
+      /WhatsApp|facebookexternalhit|Facebot|Twitterbot|LinkedInBot|TelegramBot/i.test(
+        userAgent,
+      );
+
+    if (socialCrawler) {
+      return res.status(200).render("share-preview");
+    }
+
+    next();
+  },
+  ...inBazaar,
+  posPage,
+);
 r.get("/", ...inBazaar, posPage);
 
 r.get("/api/bazaar/recap", ...inBazaar, wrap(apiBazaarRecap));
