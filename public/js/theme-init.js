@@ -1,14 +1,9 @@
-(function () {
-  "use strict";
+﻿"use strict";
 
+(function () {
   try {
     const savedTheme = localStorage.getItem("ym-theme");
-
-    const systemDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-
-    const theme = savedTheme || (systemDark ? "dark" : "light");
+    const theme = savedTheme === "dark" ? "dark" : "light";
 
     document.documentElement.dataset.theme = theme;
   } catch (error) {
