@@ -3214,7 +3214,6 @@ body:has(.login)::before {
 :root[data-theme="dark"] .about-logo img {
   filter: invert(1) !important;
 }
-
 :root {
   --login-g1: #1c1c20;
   --login-g2: #35353b;
@@ -3312,7 +3311,21 @@ body:has(.login)::after {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
 }
 
-.login input,
+.login input {
+  --login-ring: conic-gradient(
+    from var(--login-angle),
+    var(--line) 0deg,
+    var(--line) 250deg,
+    var(--neon-faint) 296deg,
+    var(--neon-mid) 322deg,
+    var(--neon-hot) 336deg,
+    var(--neon-mid) 348deg,
+    var(--line) 360deg
+  );
+  border: 1px solid transparent;
+  animation: loginOrbit 9s linear infinite;
+}
+
 .login .login-button {
   --login-ring: conic-gradient(
     from var(--login-angle),
@@ -3338,15 +3351,15 @@ body:has(.login)::after {
 }
 
 .login input[type="password"] {
-  animation-duration: 4.2s;
-  animation-delay: -1.4s;
+  animation-duration: 11s;
+  animation-delay: -3.5s;
 }
 
 .login input:focus {
-  animation-duration: 1.3s;
+  animation-duration: 5s;
   box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--brand) 12%, transparent),
-    0 0 20px var(--neon-pulse);
+    0 0 0 3px color-mix(in srgb, var(--brand) 10%, transparent),
+    0 0 12px var(--neon-pulse);
 }
 
 .login .login-button {
@@ -3411,7 +3424,6 @@ body:has(.login)::after {
     animation: none !important;
   }
 }
-
 .login > .login-tagline {
   display: grid;
   justify-items: center;
@@ -3500,7 +3512,6 @@ body:has(.login)::after {
     animation: none !important;
   }
 }
-
 :root {
   --silver-ico: #5c616b;
   --silver-glow: rgba(128, 133, 143, 0.5);
@@ -3634,7 +3645,6 @@ body:has(.login)::after {
     animation: none !important;
   }
 }
-
 .login {
   max-width: 330px;
   margin: 7vh auto 22px;
