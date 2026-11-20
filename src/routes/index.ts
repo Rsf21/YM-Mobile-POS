@@ -6,6 +6,7 @@ import {
   loginPage,
   login,
   logout,
+  adminLogout,
   adminLoginPage,
   adminLogin,
 } from "../../controllers/auth.controller";
@@ -73,6 +74,7 @@ r.get("/acikiwir", adminLoginPage);
 r.post("/acikiwir", loginLimiter, wrap(adminLogin));
 
 r.post("/logout", logout);
+r.post("/logoutAdmin", adminLogout);
 
 r.get("/bazar", requireAuth, wrap(bazaarListPage));
 r.post("/bazar", requireAuth, wrap(bazaarCreate));

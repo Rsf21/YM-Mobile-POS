@@ -1,11 +1,15 @@
-
 <%- include('partials/head') %>
 
 <section class="login">
   <div class="login-logo">
     <img src="/images/TECH/about-logo.png" alt="Logo Yomart">
   </div>
-  
+
+  <div class="login-tagline">
+    <strong>Yomart</strong>
+    <span>Mobile POS</span>
+  </div>
+
   <% if (error) { %>
     <div class="alert"><%= error %></div>
   <% } %>
@@ -48,10 +52,11 @@
     <button class="btn login-button" type="submit">
       Masuk
     </button>
+
     <p class="login-credit">
-  Founded &amp; Developed By
-  <strong>Reza Septa Fauziansyah</strong>
-</p>
+      Founded &amp; Developed By
+      <strong>Reza Septa Fauziansyah</strong>
+    </p>
   </form>
 </section>
 

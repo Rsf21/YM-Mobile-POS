@@ -74,3 +74,8 @@ export function logout(req: Request, res: Response) {
   req.session = null;
   res.redirect("/login");
 }
+
+export function adminLogout(req: Request, res: Response) {
+  req.session = null;
+  res.redirect("/acikiwir");
+}
