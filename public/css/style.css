@@ -3634,3 +3634,87 @@ body:has(.login)::after {
     animation: none !important;
   }
 }
+
+.login {
+  max-width: 330px;
+  margin: 7vh auto 22px;
+  padding: 22px 22px 20px;
+  gap: 8px;
+  border-radius: var(--r-md);
+}
+
+.login .login-logo {
+  width: 150px !important;
+  height: 64px !important;
+  margin: 0 auto 2px !important;
+}
+
+.login .login-logo img {
+  width: 150px !important;
+  height: 64px !important;
+}
+
+.login > .login-tagline {
+  gap: 5px;
+  margin: -4px 0 6px;
+}
+
+.login-tagline strong {
+  font-size: 17px;
+}
+
+.login-tagline span {
+  font-size: 10px;
+}
+
+.login-tagline span::before,
+.login-tagline span::after {
+  width: 22px;
+}
+
+.login form.stack {
+  gap: 7px;
+}
+
+.login label {
+  font-size: 12px;
+}
+
+.login label:not(:first-child) {
+  margin-top: 4px;
+}
+
+.login input {
+  min-height: 42px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.login .password-field input {
+  padding-right: 80px;
+}
+
+.login .login-button {
+  min-height: 42px;
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.login .login-credit {
+  margin: 4px 0 0;
+  padding-top: 10px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.login .login-credit strong {
+  font-size: 12px;
+}
+
+@media (max-width: 480px) {
+  .login {
+    max-width: 310px;
+    margin: 6vh auto 20px;
+    padding: 20px 18px 18px;
+  }
+}
